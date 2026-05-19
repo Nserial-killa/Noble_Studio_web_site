@@ -26,7 +26,7 @@
             }
         }
     </script>
-    <style>
+    <style>btn-contactame
         body {
             box-sizing: border-box;
         }
@@ -63,6 +63,12 @@
             width: 40px;
             height: 40px;
             fill: #FFD700;
+        }
+
+        #btn-contactame {
+            background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%);
+            color: #000;
+            transition: background 0.3s ease, color 0.3s ease;
         }
     </style>
 </head>
@@ -157,16 +163,18 @@
                 <div class="bg-black/50 p-8 rounded-xl border border-gold/20 hover-lift fade-in">
                     <div class="w-16 h-16 gold-gradient rounded-lg flex items-center justify-center mb-6">
                         <svg class="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v2a2 2 0 002 2h2a2 2 0 002-2v-2M5 17h14M5 7h14M7 7v10M17 7v10"></path>
                         </svg>
                     </div>
-                    <h3 class="text-2xl font-bold mb-4 text-gold">Diseño Web</h3>
-                    <p class="text-gray-300 mb-6">Diseñamos interfaces web modernas, intuitivas y responsivas que convierten visitantes en clientes.</p>
+                    <h3 class="text-2xl font-bold mb-4 text-gold">Recuperación de Computadoras</h3>
+                    <p class="text-gray-300 mb-6">
+                        ¿Tu computadora está lenta? La optimizo y la dejo rápida, segura y lista para estudiar o trabajar, sin necesidad de comprar una nueva.
+                    </p>
                     <ul class="text-sm text-gray-400 space-y-2">
-                        <li>• UI/UX Design</li>
-                        <li>• Diseño responsivo</li>
-                        <li>• Prototipado</li>
-                        <li>• Wireframes</li>
+                        <li>• Recuperación de PCs lentas</li>
+                        <li>• Instalación de sistema optimizado</li>
+                        <li>• Programas básicos incluidos</li>
+                        <li>• Lista para usar desde el primer día</li>
                     </ul>
                 </div>
 
@@ -332,7 +340,7 @@
                             </div>
                             <div>
                                 <p class="text-gold font-semibold">Email</p>
-                                <p class="text-gray-300">noble-studiocr@protonmail.com</p>
+                                <p class="text-gray-300">noble-studiocr@proton.me</p>
                             </div>
                         </div>
                         
@@ -362,40 +370,17 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="fade-in">
-                    <form id="contact-form" action="https://formspree.io/f/mrervend" method="POST" class="space-y-6">
-                        <div>
-                            <label for="name" class="block text-sm font-medium text-gold mb-2">Nombre</label>
-                            <input type="text" id="name" name="name" required class="w-full px-4 py-3 bg-gray-800 border border-gold/30 rounded-lg focus:outline-none focus:border-gold text-white">
-                        </div>
-                        
-                        <div>
-                            <label for="email" class="block text-sm font-medium text-gold mb-2">Tu Correo Electrónico</label>
-                            <input type="email" id="email" name="email" required class="w-full px-4 py-3 bg-gray-800 border border-gold/30 rounded-lg focus:outline-none focus:border-gold text-white">
-                        </div>
-                        
-                        <!-- <div>
-                            <label for="project" class="block text-sm font-medium text-gold mb-2">Tipo de Proyecto</label>
-                            <select id="project" name="project" class="w-full px-4 py-3 bg-gray-800 border border-gold/30 rounded-lg focus:outline-none focus:border-gold text-white">
-                                <option value="">Selecciona un servicio</option>
-                                <option value="diseño-digital">Diseño Digital</option>
-                                <option value="diseño-web">Diseño Web</option>
-                                <option value="desarrollo-web">Desarrollo Web</option>
-                                <option value="proyecto-completo">Proyecto Completo</option>
-                            </select>
-                        </div> -->
-                        
-                        <div>
-                            <label for="message" class="block text-sm font-medium text-gold mb-2">Mensaje</label>
-                            <textarea id="message" name="message" rows="4" required class="w-full px-4 py-3 bg-gray-800 border border-gold/30 rounded-lg focus:outline-none focus:border-gold text-white resize-none"></textarea>
-                        </div>
-                        
-                        <button type="submit" class="w-full gold-gradient text-black py-3 rounded-lg font-semibold hover:shadow-lg hover:shadow-gold/30 transition-all duration-300">
-                            Enviar Mensaje
-                        </button>
-                    </form>
+
+
+                <div class="mt-8 fade-in">
+                    <h3 class="text-2xl font-bold mb-6 text-gold">¿Listo para comenzar?</h3>
+	                <a href="#contact" id="btn-contactame"  
+		                class="btn-primary px-6 py-2 rounded-lg text-white font-medium inline-flex items-center">
+			                <i class="fas fa-paper-plane mr-2"></i> Contáctanos
+                    </a>
                 </div>
+                
+                
             </div>
         </div>
     </section>
@@ -404,7 +389,12 @@
     <footer class="bg-black border-t border-gold/20 py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
-                <div class="flex items-center justify-center space-x-3 mb-6">
+                <div class="flex items-center jus//Funcion para contactar. Click al boton "Contáctame" y redirigir a correo electrónico
+document.getElementById("btn-contactame").addEventListener("click", function(e) {
+    setTimeout(function() {
+        window.location.href = "mailto:noble-studiocr@proton.me";
+    }, 1000);
+});tify-center space-x-3 mb-6">
                     <img src="/img/noble_studio_logo.png" class="h-24" alt="">
                     <span class="text-2xl font-bold text-gold">Noble Studio</span>
                 </div>
@@ -420,6 +410,14 @@
     </footer>
 
     <script>
+
+        //Funcion para contactar. Click al boton "Contáctame" y redirigir a correo electrónico
+        document.getElementById("btn-contactame").addEventListener("click", function(e) {
+        setTimeout(function() {
+        window.location.href = "mailto:noble-studiocr@proton.me";
+        }, 1000);
+        });
+
         // Mobile menu toggle
         const menuBtn = document.getElementById('menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -464,60 +462,8 @@
 
 
 
-        // Contact form handling
-        // Reemplazo del manejo del formulario de contacto
-document.getElementById('contact-form').addEventListener('submit', async function(e) {
-    e.preventDefault(); // Evita que la página se recargue
+        
     
-    const form = this;
-    const formData = new FormData(form);
-    const name = formData.get('name');
-
-    // Cambia "TU_ID_AQUÍ" por el ID que te da Formspree.io
-    // Si aún no tienes cuenta, regístrate gratis en formspree.io y crea un "Form"
-    const formspreeEndpoint = "https://formspree.io/f/TU_ID_AQUÍ";
-
-    try {
-        const response = await fetch(formspreeEndpoint, {
-            method: "POST",
-            body: formData,
-            headers: {
-                'Accept': 'application/json'
-            }
-        });
-
-        if (response.ok) {
-            // Crear el mensaje de éxito (Dorado)
-            const successDiv = document.createElement('div');
-            successDiv.className = 'bg-gold/20 border border-gold text-gold px-6 py-4 rounded-lg mb-6 fade-in';
-            successDiv.innerHTML = `
-                <div class="flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    <span>¡Gracias ${name}! Tu mensaje ha sido enviado correctamente a Noble Studio. Nos pondremos en contacto pronto.</span>
-                </div>
-            `;
-            
-            // Insertar el mensaje arriba del formulario
-            form.parentNode.insertBefore(successDiv, form);
-            
-            // Limpiar el formulario
-            form.reset();
-            
-            // Quitar el aviso después de 10 segundos
-            setTimeout(() => {
-                successDiv.remove();
-            }, 10000);
-        } else {
-            alert("Oops! Hubo un problema al enviar el formulario.");
-        }
-    } catch (error) {
-        alert("Error de conexión. Revisa tu internet e intenta de nuevo.");
-    }
-    });
-
-
     </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9927974ac45cc82c',t:'MTc2MTEyMTM4OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
