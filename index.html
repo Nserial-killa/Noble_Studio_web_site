@@ -1,17 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
-    <title>Noble Studio</title>
-</head>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Noble Studio - Diseño y Desarrollo Digital</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -26,53 +19,247 @@
             }
         }
     </script>
-    <style>btn-contactame
+    <style>
+        /* ================================================
+           ESTILOS BASE
+           box-sizing: border-box hace que el padding y
+           el border no agranden el tamaño del elemento.
+           Sin esto, un div de 100px con padding-20px
+           mediria 140px en lugar de 100px.
+        ================================================ */
         body {
             box-sizing: border-box;
         }
-        
-        .gradient-bg {
-            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+
+        /* ================================================
+           GRADIENTE ANIMADO (hero y seccion contacto)
+
+           @keyframes define una animacion con nombre.
+           Aqui movemos la "posicion" del fondo de
+           izquierda a derecha y vuelta, dando efecto
+           de flujo de color.
+
+           El truco: background-size: 400% 400% crea un
+           lienzo de fondo 4x mas grande que el elemento.
+           La animacion mueve background-position dentro
+           de ese lienzo gigante.
+        ================================================ */
+        @keyframes gradientShift {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-        
+
+        .gradient-bg {
+            background: linear-gradient(-45deg, #000000, #1a1a1a, #0a0a0a, #111827);
+            background-size: 400% 400%;
+            animation: gradientShift 10s ease infinite;
+        }
+
+        /* ================================================
+           GRADIENTE DORADO
+           Usado en botones, iconos y avatares del equipo.
+        ================================================ */
         .gold-gradient {
             background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%);
         }
-        
+
+        /* ================================================
+           HOVER-LIFT: tarjeta que sube al pasar el mouse
+           transform: translateY(-5px) mueve el elemento
+           5px hacia arriba.
+           box-shadow agrega una sombra dorada difusa.
+           transition anima el cambio suavemente (0.3s).
+        ================================================ */
         .hover-lift {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
+
         .hover-lift:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 40px rgba(255, 215, 0, 0.2);
         }
-        
+
+        /* ================================================
+           FADE-IN AL HACER SCROLL
+           Los elementos empiezan con opacity:0 (invisibles)
+           y desplazados 30px hacia abajo.
+
+           Cuando JS agrega la clase .visible, la
+           transicion los lleva a opacity:1 y posicion
+           normal. El usuario lo percibe como que
+           "aparecen flotando hacia arriba".
+        ================================================ */
         .fade-in {
             opacity: 0;
             transform: translateY(30px);
             transition: opacity 0.6s ease, transform 0.6s ease;
         }
-        
+
         .fade-in.visible {
             opacity: 1;
             transform: translateY(0);
         }
-        
-        .eagle-icon {
-            width: 40px;
-            height: 40px;
-            fill: #FFD700;
-        }
 
+        /* ================================================
+           BOTON PRINCIPAL DE CONTACTO
+           El selector #id tiene mayor especificidad que
+           las clases de Tailwind, por eso este CSS
+           "gana" sobre text-black de Tailwind.
+        ================================================ */
         #btn-contactame {
             background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%);
             color: #000;
             transition: background 0.3s ease, color 0.3s ease;
         }
+
+        /* ================================================
+           NAVBAR: efecto al hacer scroll
+           La clase .scrolled se agrega/quita con JS
+           segun si el usuario scrolleo mas de 50px.
+           box-shadow da la sombra dorada sutil abajo.
+        ================================================ */
+        nav.scrolled {
+            background: rgba(0, 0, 0, 0.98) !important;
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.15);
+        }
+
+        /* ================================================
+           CURSOR PARPADEANTE DEL EFECTO TYPING
+
+           @keyframes blink alterna entre opaco y
+           transparente. step-end hace el parpadeo
+           abrupto (no gradual), como un cursor real.
+
+           Es un span inline que aparece justo despues
+           del texto que se esta "escribiendo".
+        ================================================ */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0; }
+        }
+
+        .typing-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1em;
+            background-color: #FFD700;
+            margin-left: 3px;
+            vertical-align: middle;
+            animation: blink 0.7s step-end infinite;
+        }
+
+        /* ================================================
+           PARALLAX DEL HERO
+           will-change le avisa al browser que este
+           elemento va a ser animado, permitiendole
+           optimizarlo en la GPU de antemano.
+        ================================================ */
+        #hero-content {
+            will-change: transform;
+        }
+
+        /* ================================================
+           NUMEROS DE ESTADISTICAS (CONTADORES)
+           background-clip: text + transparent fill
+           es el truco para aplicar un gradiente al
+           texto. El gradiente se recorta con la forma
+           de las letras.
+        ================================================ */
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        /* ================================================
+           BOTON FLOTANTE DE WHATSAPP
+
+           position: fixed lo ancla a la pantalla sin
+           importar el scroll. bottom/right lo ubican
+           en la esquina inferior derecha.
+
+           z-index: 9999 lo pone encima de todo el
+           contenido de la pagina.
+
+           La animacion 'pulse' hace que el boton
+           "respire" para llamar la atencion.
+        ================================================ */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50%       { transform: scale(1.08); }
+        }
+
+        #whatsapp-float {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 9999;
+            width: 60px;
+            height: 60px;
+            background-color: #25D366; /* verde oficial de WhatsApp */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.45);
+            animation: pulse 2.5s ease-in-out infinite;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        /* Al pasar el mouse: pausa la animacion y agranda un poco */
+        #whatsapp-float:hover {
+            animation-play-state: paused;
+            transform: scale(1.12);
+            box-shadow: 0 6px 28px rgba(37, 211, 102, 0.6);
+        }
+
+        #whatsapp-float i {
+            font-size: 1.9rem;
+            color: #fff;
+        }
+
+        /* Tooltip "Escríbenos" que aparece al pasar el mouse */
+        #whatsapp-float::before {
+            content: 'Escríbenos';
+            position: absolute;
+            right: 70px;
+            background: #25D366;
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 20px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        #whatsapp-float:hover::before {
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-black text-white font-sans">
+
+    <!-- ================================================
+         BOTON FLOTANTE DE WHATSAPP
+         Visible en todas las secciones del sitio.
+         target="_blank" abre WhatsApp en pestaña nueva.
+         El numero va sin espacios: 506 (Costa Rica) + numero.
+    ================================================ -->
+    <a id="whatsapp-float"
+       href="https://wa.me/50689755791"
+       target="_blank"
+       aria-label="Contactar por WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
     <!-- Navigation -->
     <nav class="fixed top-0 w-full bg-black/90 backdrop-blur-sm z-50 border-b border-gold/20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -84,6 +271,7 @@
                 <div class="hidden md:flex space-x-8">
                     <a href="#inicio" class="text-white hover:text-gold transition-colors">Inicio</a>
                     <a href="#servicios" class="text-white hover:text-gold transition-colors">Servicios</a>
+                    <a href="#projects" class="text-white hover:text-gold transition-colors">Proyectos</a>
                     <a href="#equipo" class="text-white hover:text-gold transition-colors">Equipo</a>
                     <a href="#contacto" class="text-white hover:text-gold transition-colors">Contacto</a>
                 </div>
@@ -99,27 +287,48 @@
             <div class="px-2 pt-2 pb-3 space-y-1">
                 <a href="#inicio" class="block px-3 py-2 text-white hover:text-gold transition-colors">Inicio</a>
                 <a href="#servicios" class="block px-3 py-2 text-white hover:text-gold transition-colors">Servicios</a>
+                <a href="#projects" class="block px-3 py-2 text-white hover:text-gold transition-colors">Proyectos</a>
                 <a href="#equipo" class="block px-3 py-2 text-white hover:text-gold transition-colors">Equipo</a>
                 <a href="#contacto" class="block px-3 py-2 text-white hover:text-gold transition-colors">Contacto</a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="inicio" class="min-h-full gradient-bg flex items-center justify-center pt-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <!-- ================================================
+         HERO SECTION (#inicio)
+         min-h-screen: el hero ocupa al menos toda la
+         pantalla del usuario, sin importar su tamaño.
+         overflow-hidden evita que el contenido se vea
+         fuera de la seccion cuando el parallax lo mueve.
+    ================================================ -->
+    <section id="inicio" class="min-h-screen gradient-bg flex items-center justify-center pt-16 overflow-hidden">
+
+        <!-- id="hero-content": el JS mueve este div con
+             transform para crear el efecto parallax -->
+        <div id="hero-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
             <div class="text-center">
+
+                <!-- Logo -->
                 <div class="mb-8">
-                    <img src="/img/noble_studio_logo.png" class="h-48 mx-auto" alt="">
+                    <img src="/img/noble_studio_logo.png" class="h-48 mx-auto" alt="Noble Studio Logo">
                 </div>
+
+                <!-- Titulo principal -->
                 <h1 class="text-5xl md:text-7xl font-bold mb-6">
                     <span class="text-white">Noble</span>
                     <span class="text-gold"> Studio</span>
                 </h1>
-                <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
-                    Transformamos ideas en experiencias digitales extraordinarias. Diseño y desarrollo web profesional.
+
+                <!-- Subtitulo con efecto typing.
+                     #typing-text: el JS escribe el texto aqui,
+                     caracter por caracter.
+                     .typing-cursor: el palito dorado parpadeante. -->
+                <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto min-h-[2em]">
+                    <span id="typing-text"></span><span class="typing-cursor"></span>
                 </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+
+                <!-- Botones de accion (CTA) -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-16">
                     <a href="#servicios" class="gold-gradient text-black px-8 py-4 rounded-lg font-semibold hover:shadow-lg hover:shadow-gold/30 transition-all duration-300">
                         Ver Servicios
                     </a>
@@ -127,6 +336,24 @@
                         Contactar
                     </a>
                 </div>
+
+                <!-- CONTADORES ANIMADOS
+                     data-target: el numero hasta donde cuenta el JS.
+                     data-suffix: el texto que se agrega al final
+                     (ej: "+" o " año").
+                     El JS los lee con getAttribute() y anima
+                     el conteo desde 0. -->
+                <div class="grid grid-cols-2 gap-8 max-w-xs mx-auto fade-in">
+                    <div class="text-center">
+                        <div class="stat-number" data-target="5" data-suffix="+">0</div>
+                        <p class="text-gray-400 mt-2 text-xs uppercase tracking-widest">Proyectos</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="stat-number" data-target="1" data-suffix=" año">0</div>
+                        <p class="text-gray-400 mt-2 text-xs uppercase tracking-widest">Experiencia</p>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
@@ -260,12 +487,46 @@
 
 
 
-        </div> 
+            <!-- Project: PokeApi -->
+            <div class="project-card rounded-lg overflow-hidden">
+                <div class="bg-gray-700 flex items-center justify-center">
+                    <video class="w-full h-full object-cover" autoplay muted loop playsinline>
+                        <source src="/assets/PokeApi.mp4" type="video/mp4" />
+                    </video>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-2 text-gold">Pokédex App</h3>
+                    <p class="text-white mb-4">Aplicación web que consume la PokéAPI REST para buscar y visualizar información detallada de Pokémon: estadísticas, tipos, habilidades e imágenes, con interfaz moderna y responsive.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="bg-gray-700 text-xs text-gold px-3 py-1 rounded-full">HTML</span>
+                        <span class="bg-gray-700 text-xs text-gold px-3 py-1 rounded-full">CSS</span>
+                        <span class="bg-gray-700 text-xs text-gold px-3 py-1 rounded-full">JS</span>
+                        <span class="bg-gray-700 text-xs text-gold px-3 py-1 rounded-full">REST API</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project: Tesla App -->
+            <div class="project-card rounded-lg overflow-hidden">
+                <div class="bg-gray-700 flex items-center justify-center">
+                    <video class="w-full h-full object-cover" autoplay muted loop playsinline>
+                        <source src="/assets/VideoCortoTeslaApp.mp4" type="video/mp4" />
+                    </video>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-2 text-gold">Tesla App UI</h3>
+                    <p class="text-white mb-4">Réplica de interfaz de usuario inspirada en el diseño de Tesla, con navegación fluida, animaciones y diseño minimalista de alto impacto visual.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="bg-gray-700 text-xs text-gold px-3 py-1 rounded-full">HTML</span>
+                        <span class="bg-gray-700 text-xs text-gold px-3 py-1 rounded-full">CSS</span>
+                        <span class="bg-gray-700 text-xs text-gold px-3 py-1 rounded-full">JS</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 </section>
-
-
-
 
 
 
@@ -278,7 +539,7 @@
                     Nuestro <span class="text-gold">Equipo</span>
                 </h2>
                 <p class="text-xl text-gray-300 max-w-3xl mx-auto">
-                    Un dúo dinámico que combina creatividad visionaria con excelencia técnica para crear soluciones digitales excepcionales.
+                    Un dúo dinámico que combina creatividad visionaria con excelencia técnica para crear solucionar problemas digitales.
                 </p>
             </div>
             
@@ -290,12 +551,18 @@
                         </svg>
                     </div>
                     <p class="text-gray-300 mb-8 font-bold text-xl">Melissa Lopez</p>
-                    <h3 class="text-2xl font-bold mb-2 text-gold">CEO & Creative Director</h3>
-                    <p class="text-gray-300 mb-4">La visionaria creativa</p>
-                    <p class="text-gray-400 leading-relaxed">
-                        Lidera la visión creativa de Noble Studio, transformando ideas abstractas en conceptos visuales impactantes. 
+                    <h3 class="text-2xl font-bold mb-2 text-gold">CEO</h3>
+                    <p class="text-gray-300 mb-4">Diseñadora creativa</p>
+                    <p class="text-gray-400 leading-relaxed mb-6">
+                        Lidera la visión creativa de Noble Studio, transformando ideas abstractas en conceptos visuales impactantes.
                         Su enfoque innovador y ojo para el detalle aseguran que cada proyecto refleje la esencia única de nuestros clientes.
                     </p>
+                    <!-- Boton LinkedIn: target="_blank" abre en pestaña nueva.
+                         Reemplaza el # con la URL real del perfil. -->
+                    <a href="#" target="_blank"
+                       class="inline-flex items-center gap-2 px-4 py-2 border border-gold/40 rounded-lg text-gold hover:bg-gold/10 transition-colors text-sm">
+                        <i class="fab fa-linkedin"></i> Ver perfil en LinkedIn
+                    </a>
                 </div>
 
                 <div class="text-center fade-in">
@@ -305,12 +572,18 @@
                         </svg>
                     </div>
                     <p class="text-gray-300 mb-8 font-bold text-xl">Jimmy Cabalceta</p>
-                    <h3 class="text-2xl font-bold mb-2 text-gold">CTO & Lead Developer</h3>
-                    <p class="text-gray-300 mb-4">El arquitecto tecnológico</p>
-                    <p class="text-gray-400 leading-relaxed">
-                        Convierte las visiones creativas en realidades digitales funcionales. Su expertise técnico y pasión por la 
-                        programación garantizan que cada proyecto sea robusto, escalable y esté a la vanguardia tecnológica.
+                    <h3 class="text-2xl font-bold mb-2 text-gold">CTO</h3>
+                    <p class="text-gray-300 mb-4">Lider de tecnológia</p>
+                    <p class="text-gray-400 leading-relaxed mb-6">
+                        Convierte las visiones creativas en realidades digitales funcionales. Su experiencia en
+                        programación garantizan que cada proyecto sea robusto, escalable y esté a la altura tecnológica.
                     </p>
+                    <!-- Boton LinkedIn: target="_blank" abre en pestaña nueva.
+                         Reemplaza el # con la URL real del perfil. -->
+                    <a href="#" target="_blank"
+                       class="inline-flex items-center gap-2 px-4 py-2 border border-gold/40 rounded-lg text-gold hover:bg-gold/10 transition-colors text-sm">
+                        <i class="fab fa-linkedin"></i> Ver perfil en LinkedIn
+                    </a>
                 </div>
             </div>
         </div>
@@ -344,17 +617,22 @@
                             </div>
                         </div>
                         
-                        <!-- <div class="flex items-center space-x-4">
+                        <!-- WhatsApp: wa.me es la URL oficial de WhatsApp para
+                             abrir una conversacion directa sin necesidad de
+                             agregar el contacto. El numero va sin espacios ni
+                             guiones, con codigo de pais (506 = Costa Rica). -->
+                        <div class="flex items-center space-x-4">
                             <div class="w-12 h-12 gold-gradient rounded-lg flex items-center justify-center">
-                                <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                </svg>
+                                <i class="fab fa-whatsapp text-black text-xl"></i>
                             </div>
                             <div>
                                 <p class="text-gold font-semibold">WhatsApp</p>
-                                <p class="text-gray-300">+1 (555) 123-4567</p>
+                                <a href="https://wa.me/50689755791" target="_blank"
+                                   class="text-gray-300 hover:text-gold transition-colors">
+                                    +506 8975-5791
+                                </a>
                             </div>
-                        </div> -->
+                        </div>
                         
                         <div class="flex items-center space-x-4">
                             <div class="w-12 h-12 gold-gradient rounded-lg flex items-center justify-center">
@@ -374,8 +652,8 @@
 
                 <div class="mt-8 fade-in">
                     <h3 class="text-2xl font-bold mb-6 text-gold">¿Listo para comenzar?</h3>
-	                <a href="#contact" id="btn-contactame"  
-		                class="btn-primary px-6 py-2 rounded-lg text-white font-medium inline-flex items-center">
+	                <a href="#contacto" id="btn-contactame"
+		                class="btn-primary px-6 py-2 rounded-lg text-black font-medium inline-flex items-center">
 			                <i class="fas fa-paper-plane mr-2"></i> Contáctanos
                     </a>
                 </div>
@@ -389,12 +667,7 @@
     <footer class="bg-black border-t border-gold/20 py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
-                <div class="flex items-center jus//Funcion para contactar. Click al boton "Contáctame" y redirigir a correo electrónico
-document.getElementById("btn-contactame").addEventListener("click", function(e) {
-    setTimeout(function() {
-        window.location.href = "mailto:noble-studiocr@proton.me";
-    }, 1000);
-});tify-center space-x-3 mb-6">
+                <div class="flex items-center justify-center space-x-3 mb-6">
                     <img src="/img/noble_studio_logo.png" class="h-24" alt="">
                     <span class="text-2xl font-bold text-gold">Noble Studio</span>
                 </div>
@@ -411,38 +684,235 @@ document.getElementById("btn-contactame").addEventListener("click", function(e) 
 
     <script>
 
-        //Funcion para contactar. Click al boton "Contáctame" y redirigir a correo electrónico
-        document.getElementById("btn-contactame").addEventListener("click", function(e) {
-        setTimeout(function() {
-        window.location.href = "mailto:noble-studiocr@proton.me";
-        }, 1000);
+        /* ================================================
+           EFECTO TYPING EN EL HERO
+
+           Escribe el texto caracter a caracter en el
+           span#typing-text, luego lo borra y repite.
+
+           - charIndex: posicion actual dentro del texto
+           - isDeleting: true = modo borrado, false = modo escritura
+           - typingSpeed: milisegundos entre cada letra al escribir
+           - deletingSpeed: ms entre cada borrado (mas rapido)
+           - pauseTime: ms de pausa cuando termina de escribir
+        ================================================ */
+        const typingTarget = document.getElementById('typing-text');
+        const textToType   = 'Transformamos ideas en experiencias digitales extraordinarias.';
+        let charIndex   = 0;
+        let isDeleting  = false;
+        const typingSpeed   = 45;
+        const deletingSpeed = 20;
+        const pauseTime     = 3000;
+
+        function typeEffect() {
+            if (!isDeleting) {
+                // Modo escritura: substring(0, n) toma los primeros n caracteres
+                typingTarget.textContent = textToType.substring(0, charIndex + 1);
+                charIndex++;
+
+                if (charIndex === textToType.length) {
+                    // Llego al final: pausa antes de empezar a borrar
+                    setTimeout(() => { isDeleting = true; typeEffect(); }, pauseTime);
+                    return;
+                }
+            } else {
+                // Modo borrado: recorta un caracter por el final
+                typingTarget.textContent = textToType.substring(0, charIndex - 1);
+                charIndex--;
+
+                if (charIndex === 0) {
+                    isDeleting = false; // termino de borrar, vuelve a escribir
+                }
+            }
+
+            // setTimeout programa la proxima "letra" segun el modo actual
+            setTimeout(typeEffect, isDeleting ? deletingSpeed : typingSpeed);
+        }
+
+        typeEffect(); // arranca el loop al cargar la pagina
+
+
+        /* ================================================
+           CONTADORES ANIMADOS (ESTADISTICAS)
+
+           Lee el data-target de cada .stat-number y
+           anima el numero desde 0 hasta ese valor.
+
+           requestAnimationFrame(fn) llama a fn en el
+           proximo frame del browser (60fps). Es la forma
+           correcta de animar: sincroniza con la pantalla
+           y pausa automaticamente cuando la pestaña no
+           esta visible, ahorrando recursos.
+
+           easeOut: la formula (1 - (1-t)^3) hace que el
+           contador empiece rapido y desacelere al final,
+           dando una sensacion mas natural.
+
+           IntersectionObserver activa el contador solo
+           cuando el elemento es visible en pantalla,
+           para que el usuario vea el efecto completo.
+        ================================================ */
+        function animateCounter(el) {
+            const target   = parseInt(el.getAttribute('data-target'));
+            const suffix   = el.getAttribute('data-suffix') || '';
+            const duration = 1500; // duracion total en ms
+            const startTime = performance.now(); // marca de tiempo de inicio
+
+            function update(currentTime) {
+                // elapsed va de 0.0 a 1.0 durante la animacion
+                const elapsed = Math.min((currentTime - startTime) / duration, 1);
+
+                // easeOut: empieza rapido, desacelera al final
+                const eased   = 1 - Math.pow(1 - elapsed, 3);
+                const current = Math.floor(eased * target);
+
+                el.textContent = current + suffix;
+
+                if (elapsed < 1) {
+                    requestAnimationFrame(update); // sigue hasta llegar a 1.0
+                } else {
+                    el.textContent = target + suffix; // garantiza el valor exacto final
+                }
+            }
+
+            requestAnimationFrame(update);
+        }
+
+        // threshold: 0.5 = activa cuando el 50% del elemento es visible
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounter(entry.target);
+                    counterObserver.unobserve(entry.target); // solo se anima una vez
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.stat-number').forEach(el => counterObserver.observe(el));
+
+
+        /* ================================================
+           NAVBAR: EFECTO AL HACER SCROLL
+
+           window.scrollY es cuantos pixeles bajo el
+           usuario desde el tope de la pagina.
+
+           Si bajo mas de 50px, agrega la clase .scrolled
+           al nav. En CSS, esa clase agrega la sombra dorada.
+           Si vuelve arriba, la quita.
+        ================================================ */
+        const nav = document.querySelector('nav');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
         });
 
-        // Mobile menu toggle
-        const menuBtn = document.getElementById('menu-btn');
+
+        /* ================================================
+           PARALLAX EN EL HERO
+
+           Al hacer scroll, mueve el contenido del hero
+           MAS LENTO que el scroll real.
+
+           parallaxFactor = 0.4 significa: por cada 100px
+           que el usuario baja, el hero sube solo 40px.
+           Esa diferencia de velocidad crea la ilusion
+           de que el fondo esta "mas lejos".
+
+           Solo aplica mientras el hero es visible
+           (scrollY < window.innerHeight) para no afectar
+           las secciones de abajo.
+        ================================================ */
+        const heroContent    = document.getElementById('hero-content');
+        const parallaxFactor = 0.4;
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY < window.innerHeight) {
+                heroContent.style.transform = `translateY(${window.scrollY * parallaxFactor}px)`;
+            }
+        });
+
+
+        /* ================================================
+           BOTON CONTACTAME: ABRE EL CLIENTE DE CORREO
+
+           setTimeout retrasa 1 segundo la apertura del
+           correo. Esto le da tiempo al usuario de ver
+           el efecto visual del click antes de que el
+           browser cambie de contexto.
+        ================================================ */
+        document.getElementById('btn-contactame').addEventListener('click', function(e) {
+            setTimeout(function() {
+                window.location.href = 'mailto:noble-studiocr@proton.me';
+            }, 1000);
+        });
+
+
+        /* ================================================
+           MENU MOVIL: TOGGLE
+
+           classList.toggle('hidden') agrega 'hidden' si
+           no existe, o la quita si ya existe.
+           'hidden' es una clase de Tailwind que aplica
+           display: none al elemento.
+        ================================================ */
+        const menuBtn    = document.getElementById('menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
-        
+
         menuBtn.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
         });
 
-        // Smooth scrolling for navigation links
+
+        /* ================================================
+           SMOOTH SCROLL: DESPLAZAMIENTO SUAVE
+
+           Intercepta los clicks en todos los links
+           internos (href que empieza con "#").
+
+           e.preventDefault() cancela el salto brusco
+           nativo del browser.
+
+           scrollIntoView con behavior:'smooth' anima
+           el desplazamiento hasta la seccion destino.
+        ================================================ */
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+            anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                    // Close mobile menu if open
-                    mobileMenu.classList.add('hidden');
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    mobileMenu.classList.add('hidden'); // cierra el menu mobile si estaba abierto
                 }
             });
         });
 
-        // Fade in animation on scroll
+
+        /* ================================================
+           FADE-IN AL SCROLL (INTERSECTION OBSERVER)
+
+           IntersectionObserver es la API moderna para
+           detectar cuando un elemento entra al viewport
+           (la parte visible de la pantalla).
+
+           Es mejor que el viejo truco de comparar
+           getBoundingClientRect() con window.innerHeight
+           en cada evento scroll, porque el Observer es
+           mas eficiente y no bloquea el hilo principal.
+
+           threshold: 0.1 = activa cuando el 10% del
+           elemento es visible.
+           rootMargin: '-50px' = activa 50px antes del
+           borde inferior de la pantalla.
+
+           Cuando entra, agrega .visible al elemento.
+           El CSS hace la transicion opacity 0→1 y
+           translateY 30px→0.
+        ================================================ */
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -456,14 +926,8 @@ document.getElementById("btn-contactame").addEventListener("click", function(e) 
             });
         }, observerOptions);
 
-        document.querySelectorAll('.fade-in').forEach(el => {
-            observer.observe(el);
-        });
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-
-
-        
-    
     </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9927974ac45cc82c',t:'MTc2MTEyMTM4OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
