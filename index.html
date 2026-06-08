@@ -319,16 +319,9 @@
                     <span class="text-gold"> Studio</span>
                 </h1>
 
-                <!-- Subtitulo con efecto typing.
-                     #typing-text: el JS escribe el texto aqui,
-                     caracter por caracter.
-                     .typing-cursor: el palito dorado parpadeante. -->
-                <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto min-h-[2em]">
-                    <span id="typing-text"></span><span class="typing-cursor"></span>
-                </p>
-
+                
                 <!-- Botones de accion (CTA) -->
-                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-16 mt-16">
                     <a href="#servicios" class="gold-gradient text-black px-8 py-4 rounded-lg font-semibold hover:shadow-lg hover:shadow-gold/30 transition-all duration-300">
                         Ver Servicios
                     </a>
@@ -337,13 +330,34 @@
                     </a>
                 </div>
 
+
+                <!-- Subtitulo con efecto typing.
+                     #typing-text: el JS escribe el texto aqui,
+                     caracter por caracter.
+                     .typing-cursor: el palito dorado parpadeante. -->
+
+                    <!-- <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                    Trabajemos <span class="text-gold">Juntos</span>
+                    </h2> -->
+
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                    Trabajemos<span id="typing-text"></span>
+                    </span> <span class="text-gold">Juntos</span>
+                    </h2>
+
+                    <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                    ¿Tienes un proyecto en mente? Nos encantaría escuchar tus ideas y ayudarte a convertirlas en realidad digital.
+                    </p>
+                    
+
+
                 <!-- CONTADORES ANIMADOS
                      data-target: el numero hasta donde cuenta el JS.
                      data-suffix: el texto que se agrega al final
                      (ej: "+" o " año").
                      El JS los lee con getAttribute() y anima
                      el conteo desde 0. -->
-                <div class="grid grid-cols-2 gap-8 max-w-xs mx-auto fade-in">
+                <!-- <div class="grid grid-cols-2 gap-8 max-w-xs mx-auto fade-in">
                     <div class="text-center">
                         <div class="stat-number" data-target="5" data-suffix="+">0</div>
                         <p class="text-gray-400 mt-2 text-xs uppercase tracking-widest">Proyectos</p>
@@ -352,7 +366,7 @@
                         <div class="stat-number" data-target="1" data-suffix=" año">0</div>
                         <p class="text-gray-400 mt-2 text-xs uppercase tracking-widest">Experiencia</p>
                     </div>
-                </div>
+                </div> -->
 
             </div>
         </div>
@@ -532,7 +546,7 @@
 
 
     <!-- Team Section -->
-    <section id="equipo" class="py-20 bg-black">
+    <!-- <section id="equipo" class="py-20 bg-black">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 fade-in">
                 <h2 class="text-4xl md:text-5xl font-bold mb-6">
@@ -556,10 +570,10 @@
                     <p class="text-gray-400 leading-relaxed mb-6">
                         Lidera la visión creativa de Noble Studio, transformando ideas abstractas en conceptos visuales impactantes.
                         Su enfoque innovador y ojo para el detalle aseguran que cada proyecto refleje la esencia única de nuestros clientes.
-                    </p>
+                    </p> -->
                     <!-- Boton LinkedIn: target="_blank" abre en pestaña nueva.
                          Reemplaza el # con la URL real del perfil. -->
-                    <a href="https://www.linkedin.com/in/melissa-tinoco-lopez/?locale=en" target="_blank"
+                    <!-- <a href="https://www.linkedin.com/in/melissa-tinoco-lopez/?locale=en" target="_blank"
                        class="inline-flex items-center gap-2 px-4 py-2 border border-gold/40 rounded-lg text-gold hover:bg-gold/10 transition-colors text-sm">
                         <i class="fab fa-linkedin"></i> Ver perfil en LinkedIn
                     </a>
@@ -577,28 +591,26 @@
                     <p class="text-gray-400 leading-relaxed mb-6">
                         Convierte las visiones creativas en realidades digitales funcionales. Su experiencia en
                         programación garantizan que cada proyecto sea robusto, escalable y esté a la altura tecnológica.
-                    </p>
+                    </p> -->
                     <!-- Boton LinkedIn: target="_blank" abre en pestaña nueva.
                          Reemplaza el # con la URL real del perfil. -->
-                    <a href="https://www.linkedin.com/in/jimmy-cabalceta-alpizar-7ba2b9251" target="_blank"
+                    <!-- <a href="https://www.linkedin.com/in/jimmy-cabalceta-alpizar-7ba2b9251" target="_blank"
                        class="inline-flex items-center gap-2 px-4 py-2 border border-gold/40 rounded-lg text-gold hover:bg-gold/10 transition-colors text-sm">
                         <i class="fab fa-linkedin"></i> Ver perfil en LinkedIn
                     </a>
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
     <!-- Contact Section -->
     <section id="contacto" class="py-20 gradient-bg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 fade-in">
                 <h2 class="text-4xl md:text-5xl font-bold mb-6">
-                    Trabajemos <span class="text-gold">Juntos</span>
+                    Contáctanos<span class="text-gold"></span>
                 </h2>
-                <p class="text-xl text-gray-300 max-w-3xl mx-auto">
-                    ¿Tienes un proyecto en mente? Nos encantaría escuchar tus ideas y ayudarte a convertirlas en realidad digital.
-                </p>
+                
             </div>
             
             <div class="grid lg:grid-cols-2 gap-12">
@@ -697,7 +709,7 @@
            - pauseTime: ms de pausa cuando termina de escribir
         ================================================ */
         const typingTarget = document.getElementById('typing-text');
-        const textToType   = 'Transformamos ideas en experiencias digitales extraordinarias.';
+        const textToType   = '';
         let charIndex   = 0;
         let isDeleting  = false;
         const typingSpeed   = 45;
@@ -752,31 +764,31 @@
            cuando el elemento es visible en pantalla,
            para que el usuario vea el efecto completo.
         ================================================ */
-        function animateCounter(el) {
-            const target   = parseInt(el.getAttribute('data-target'));
-            const suffix   = el.getAttribute('data-suffix') || '';
-            const duration = 1500; // duracion total en ms
-            const startTime = performance.now(); // marca de tiempo de inicio
+        // function animateCounter(el) {
+        //     const target   = parseInt(el.getAttribute('data-target'));
+        //     const suffix   = el.getAttribute('data-suffix') || '';
+        //     const duration = 1500; // duracion total en ms
+        //     const startTime = performance.now(); // marca de tiempo de inicio
 
-            function update(currentTime) {
-                // elapsed va de 0.0 a 1.0 durante la animacion
-                const elapsed = Math.min((currentTime - startTime) / duration, 1);
+        //     function update(currentTime) {
+        //         // elapsed va de 0.0 a 1.0 durante la animacion
+        //         const elapsed = Math.min((currentTime - startTime) / duration, 1);
 
-                // easeOut: empieza rapido, desacelera al final
-                const eased   = 1 - Math.pow(1 - elapsed, 3);
-                const current = Math.floor(eased * target);
+        //         // easeOut: empieza rapido, desacelera al final
+        //         const eased   = 1 - Math.pow(1 - elapsed, 3);
+        //         const current = Math.floor(eased * target);
 
-                el.textContent = current + suffix;
+        //         el.textContent = current + suffix;
 
-                if (elapsed < 1) {
-                    requestAnimationFrame(update); // sigue hasta llegar a 1.0
-                } else {
-                    el.textContent = target + suffix; // garantiza el valor exacto final
-                }
-            }
+        //         if (elapsed < 1) {
+        //             requestAnimationFrame(update); // sigue hasta llegar a 1.0
+        //         } else {
+        //             el.textContent = target + suffix; // garantiza el valor exacto final
+        //         }
+        //     }
 
-            requestAnimationFrame(update);
-        }
+        //     requestAnimationFrame(update);
+        // }
 
         // threshold: 0.5 = activa cuando el 50% del elemento es visible
         const counterObserver = new IntersectionObserver((entries) => {
