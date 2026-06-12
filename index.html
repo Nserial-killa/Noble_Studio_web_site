@@ -243,6 +243,156 @@
         #whatsapp-float:hover::before {
             opacity: 1;
         }
+
+        /* ================================================
+           FLOTACION DEL LOGO (contenedor .ave-hero)
+
+           Solo translateY: el conjunto sube y baja 14px.
+           Ya no hay rotacion del cuerpo completo porque
+           el ala tiene su propia animacion de giro.
+
+           Duracion 2.4s sincronizada con el aleteo (1.2s):
+           2.4 / 1.2 = 2, lo que significa que el ave hace
+           exactamente DOS aleteos completos por cada ciclo
+           de subida y bajada, dando una sensacion natural.
+        ================================================ */
+        @keyframes flotar {
+            0%,  100% { transform: translateY(0px);   }
+            50%        { transform: translateY(-14px); }
+        }
+
+        /* ================================================
+           SOMBRA DE SUELO — contrafase con la flotacion
+
+           Actualizada a 2.4s para sincronizar con flotar.
+           Keyframes simplificados: solo necesitamos los
+           extremos (suelo = sombra grande, aire = pequeña).
+
+           Contrafase significa que cuando el ave esta en
+           su punto mas alto (50% del keyframe), la sombra
+           esta en su tamaño minimo, igual que en la vida real.
+        ================================================ */
+        @keyframes sombra-vuelo {
+            0%,  100% { transform: scaleX(1);   opacity: 0.55; }
+            50%        { transform: scaleX(0.6); opacity: 0.22; }
+        }
+
+        .logo-sombra {
+            height: 14px;
+            /* gradiente radial: dorado semitransparente en el centro,
+               transparente en los bordes, imita una sombra difusa real */
+            background: radial-gradient(ellipse, rgba(255, 215, 0, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            margin: 4px auto 0;
+            animation: sombra-vuelo 2.4s ease-in-out infinite;
+        }
+
+        /* ================================================
+           LOGO EN CAPAS — contenedor del ave en el hero
+
+           position: relative crea el "contexto de
+           posicionamiento" para los hijos absolutos.
+
+           Las dos imagenes (cuerpo + ala) tienen
+           position: absolute; inset: 0, lo que las
+           estira para llenar todo el contenedor,
+           apiladas perfectamente una sobre otra.
+
+           display: grid es la forma correcta de apilar
+           dos imagenes: el contenedor se dimensiona por
+           su contenido (no colapsa como con position:absolute)
+           y grid-area: 1/1 pone ambas imagenes en la misma
+           celda, superpuestas perfectamente.
+        ================================================ */
+        .ave-hero {
+            display: grid;
+            animation: flotar 2.4s ease-in-out infinite;
+            will-change: transform;
+        }
+
+        /* grid-area: 1/1 equivale a grid-row:1; grid-column:1.
+           Pone las dos imagenes en la misma celda del grid,
+           apiladas una sobre la otra.
+           height fija la altura del logo; width: auto respeta
+           las proporciones naturales de la imagen (452/552). */
+        .ave-hero img {
+            grid-area: 1 / 1;
+            height: 16.5rem;   /* equivalente a h-66 en Tailwind */
+            width: auto;
+        }
+
+        /* ================================================
+           ALETEO — el ala rota desde el hombro del ave
+
+           Los grados son asimetricos (+13° abajo, -15°
+           arriba) imitando el vuelo real donde el ala
+           sube mas de lo que baja.
+
+           transform-origin: 46.5% 42% es el punto del
+           hombro del ave en porcentaje sobre el lienzo
+           de 452x552px:  210/452 = 46.5%,  232/552 = 42%.
+
+           Usar porcentajes (no px) garantiza que el
+           pivote sea correcto a cualquier tamaño del logo.
+
+           Duracion 1.2s = exactamente la mitad de la
+           flotacion, generando 2 aleteos por ciclo.
+        ================================================ */
+        @keyframes aleteo {
+            0%,  100% { transform: rotate(13deg);  }  /* ala abajo  */
+            50%        { transform: rotate(-15deg); }  /* ala arriba */
+        }
+
+        .ala-aleteo {
+            animation: aleteo 1.2s ease-in-out infinite;
+            transform-origin: 46.5% 42%;
+            will-change: transform;
+        }
+
+        /* ================================================
+           MICROINTERACCION DEL LOGO EN NAVBAR
+
+           En el navbar NO usamos animacion continua porque
+           seria una distraccion permanente mientras el
+           usuario lee el contenido.
+
+           En su lugar: al hacer hover, el ave da un
+           pequeno "saltito". transition anima el cambio
+           suavemente en 0.3s. Cuando el mouse sale,
+           vuelve a su posicion sin salto brusco.
+        ================================================ */
+        .logo-navbar {
+            transition: transform 0.3s ease;
+        }
+
+        .logo-navbar:hover {
+            transform: translateY(-4px) rotate(2deg);
+        }
+
+        /* ================================================
+           ACCESIBILIDAD: REDUCCION DE MOVIMIENTO
+
+           prefers-reduced-motion detecta la preferencia
+           del sistema operativo del usuario (ajustes de
+           accesibilidad). Si esta activa, apagamos TODAS
+           las animaciones del logo: flotacion, aleteo y
+           sombra. El logo se ve completo y estatico.
+
+           Esto cubre a personas con condiciones
+           vestibulares o simplemente que prefieren menos
+           movimiento en la pantalla.
+        ================================================ */
+        @media (prefers-reduced-motion: reduce) {
+            .ave-hero,
+            .ala-aleteo,
+            .logo-sombra {
+                animation: none;
+                
+            }
+            .logo-navbar {
+                transition: none;
+            }
+        }
     </style>
 </head>
 <body class="bg-black text-white font-sans">
@@ -265,7 +415,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center space-x-3">
-                    <img src="/img/noble-studio-logo.png" class="h-28" alt="">
+                    <img src="/img/noble-studio-logo.png" class="h-28 logo-navbar" alt="Logo Noble Studio">
                     <span class="text-xl font-bold text-gold">Noble Studio</span>
                 </div>
                 <div class="hidden md:flex space-x-8">
@@ -308,9 +458,34 @@
         <div id="hero-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-[2px]">
             <div class="text-center">
 
-                <!-- Logo -->
-                <div class="mb-2">
-                    <img src="/img/noble-studio-logo.png" class="h-66 mx-auto" alt="Noble Studio Logo">
+                <!-- Logo en capas: cuerpo + ala animada.
+                     flex-col items-center apila verticalmente y centra.
+                     El contenedor .ave-hero aplica la flotacion del conjunto.
+                     Las dos imagenes se superponen exactamente (mismo lienzo
+                     452x552px), reconstruyendo el logo original. -->
+                <div class="mb-2 flex flex-col items-center">
+
+                    <!-- Contenedor del ave. El tamaño lo define el CSS
+                         de .ave-hero img (height: 16.5rem, width: auto). -->
+                    <div class="ave-hero">
+
+                        <!-- Capa 1: cuerpo, cabeza y cola (estaticos) -->
+                        <img src="/img/logo-cuerpo.png"
+                             alt=""
+                             aria-hidden="true">
+
+                        <!-- Capa 2: alas — se superponen al cuerpo y rotan
+                             desde el hombro con la clase ala-aleteo.
+                             Este img lleva el alt descriptivo porque es la
+                             capa "visible" que el usuario identifica. -->
+                        <img src="/img/logo-ala.png"
+                             class="ala-aleteo"
+                             alt="Noble Studio Logo">
+                    </div>
+
+                    <!-- Sombra eliptica de suelo: se encoge cuando el ave
+                         sube y crece cuando baja, sincronizada con flotar. -->
+                    <div class="logo-sombra w-32"></div>
                 </div>
 
                 <!-- Titulo principal -->
