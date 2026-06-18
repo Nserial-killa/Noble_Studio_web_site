@@ -617,215 +617,251 @@
     </section>
 
 
-    <!-- Projects Section -->
-<section id="projects" class="section">
-    <div class="container mx-auto px-6 py-10">
+    <!-- ================================================
+         SECCIÓN PROYECTOS DESTACADOS
+         Carousel horizontal con Embla (ver JS al final).
+         Fondo negro contrasta con bg-gray-900 de Servicios.
+    ================================================ -->
+    <section id="projects" class="py-20 bg-black">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        <!-- Encabezado con botones de navegacion del carousel.
-             flex-col en movil (titulo arriba, botones abajo),
-             md:flex-row en desktop (titulo y botones lado a lado). -->
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 fade-in">
-            <h2 class="text-4xl md:text-5xl font-bold text-center md:text-left text-white">
-                Proyectos <span class="text-gold">Destacados</span>
-            </h2>
-            <div class="flex gap-2 mt-6 md:mt-0 self-center md:self-auto">
-                <!-- disabled:opacity-30 y disabled:pointer-events-none son clases de
-                     Tailwind que aplican estilos cuando el atributo HTML "disabled"
-                     esta presente. El JS los activa/desactiva segun la posicion del carousel. -->
-                <button id="projects-prev" aria-label="Anterior"
-                    class="w-11 h-11 rounded-full border border-gold/50 text-gold flex items-center justify-center transition hover:bg-gold hover:text-black disabled:opacity-30 disabled:pointer-events-none">
-                    <i class="fa-solid fa-arrow-left"></i>
-                </button>
-                <button id="projects-next" aria-label="Siguiente"
-                    class="w-11 h-11 rounded-full border border-gold/50 text-gold flex items-center justify-center transition hover:bg-gold hover:text-black disabled:opacity-30 disabled:pointer-events-none">
-                    <i class="fa-solid fa-arrow-right"></i>
-                </button>
+            <!-- Encabezado + botones de navegacion del carousel.
+                 flex-col en movil: titulo arriba, botones abajo centrados.
+                 md:flex-row en desktop: titulo a la izquierda, botones a la derecha.
+                 fade-in: el IntersectionObserver del JS lo anima al entrar al viewport. -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 fade-in">
+                <div>
+                    <h2 class="text-4xl md:text-5xl font-bold text-center md:text-left text-white">
+                        Proyectos <span class="text-gold">Destacados</span>
+                    </h2>
+                    <p class="text-gray-400 mt-3 text-center md:text-left">
+                        Una seleccion de trabajos que reflejan nuestra capacidad creativa y tecnica.
+                    </p>
+                </div>
+
+                <!-- Botones prev/next de navegacion del carousel.
+                     Las clases disabled:* de Tailwind aplican estilos cuando
+                     el atributo HTML "disabled" esta presente en el elemento.
+                     El JS los activa/desactiva segun la posicion del carousel. -->
+                <div class="flex gap-3 mt-8 md:mt-0 self-center md:self-auto">
+                    <button id="projects-prev" aria-label="Proyecto anterior"
+                        class="w-11 h-11 rounded-full border border-gold/50 text-gold flex items-center justify-center transition-all duration-300 hover:bg-gold hover:text-black disabled:opacity-30 disabled:pointer-events-none">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <button id="projects-next" aria-label="Siguiente proyecto"
+                        class="w-11 h-11 rounded-full border border-gold/50 text-gold flex items-center justify-center transition-all duration-300 hover:bg-gold hover:text-black disabled:opacity-30 disabled:pointer-events-none">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
             </div>
-        </div>
 
-        <!-- Viewport del carousel.
-             overflow-hidden recorta el contenido que sobresale del area visible,
-             creando el efecto de "peek" de la tarjeta siguiente sin que la pagina
-             entera haga scroll horizontal.
-             cursor-grab/grabbing da feedback visual de que se puede arrastrar. -->
-        <div class="overflow-hidden cursor-grab active:cursor-grabbing" id="projects-carousel">
+            <!-- Viewport del carousel.
+                 overflow-hidden oculta los slides que estan fuera del area visible,
+                 creando el efecto de "peek" (asomo) de la siguiente tarjeta sin
+                 que la pagina haga scroll horizontal.
+                 cursor-grab/grabbing da retroalimentacion visual al arrastrar. -->
+            <div class="overflow-hidden cursor-grab active:cursor-grabbing" id="projects-carousel">
 
-            <!-- Embla mueve este div flex horizontalmente con CSS transforms.
-                 gap-6 (24px) es el espacio entre tarjetas. -->
-            <div class="flex gap-6">
+                <!-- Embla mueve este contenedor flex horizontalmente con CSS transforms.
+                     gap-6 = 24px de separacion entre tarjetas. -->
+                <div class="flex gap-6 items-start">
 
-                <!-- ================================================
-                     SLIDE 1 — Diseño de interfaz (MyEduc)
-                     basis-[85%]: en movil la tarjeta ocupa el 85% del
-                     viewport, dejando ver un asomo de la siguiente.
-                     sm:basis-[55%]: en tablet se ven ~1.8 tarjetas.
-                     lg:basis-[420px]: en desktop cada tarjeta mide 420px
-                     fijos; en un contenedor de ~1000px se ven ~2.3 tarjetas.
-                ================================================ -->
-                <div class="shrink-0 grow-0 basis-[85%] sm:basis-[55%] lg:basis-[420px]">
-                    <div class="project-card rounded-lg overflow-hidden h-full group flex flex-col bg-gray-800">
-                        <!-- aspect-[3/2]: relacion 3:2 para uniformizar la altura
-                             de los medios sin importar sus dimensiones originales.
-                             overflow-hidden recorta el scale del hover dentro del borde. -->
-                        <div class="aspect-[3/2] overflow-hidden bg-gray-700">
-                            <!-- group-hover:scale-105: cuando el mouse esta sobre el
-                                 .group padre, esta imagen se agranda un 5%.
-                                 transition duration-300 suaviza el zoom. -->
-                            <img src="/assets/MyEducInicio.png" alt="MyEduc — interfaz de cursos en línea"
-                                class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
-                        </div>
-                        <div class="p-6 flex flex-col flex-1">
-                            <h3 class="text-xl font-bold mb-2 text-gold">Diseño de interfaz de usuario para sitio web</h3>
-                            <p class="text-white mb-4 flex-1">Diseño de una interfaz de usuario moderna y satisfactoria para la vista del usuario para un sitio web informativo sobre cursos en línea de distintas áreas.</p>
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-gray-700 text-xs text-gold px-3 py-1 rounded-full">Canva</span>
+                    <!-- ================================================
+                         SLIDE 1 — Diseño de Interfaz de Usuario (MyEduc)
+
+                         basis-[90%]: en movil ocupa el 90% del ancho,
+                         mostrando un asomo de la siguiente tarjeta.
+                         sm:basis-[60%]: en tablet se ven ~1.6 tarjetas.
+                         lg:basis-[420px]: en desktop ancho fijo de 420px;
+                         en ~1200px de contenedor se ven aprox. 2.5 tarjetas.
+                    ================================================ -->
+                    <div class="shrink-0 grow-0 basis-[90%] sm:basis-[60%] lg:basis-[420px]">
+                        <!-- group: activa los estilos group-hover:* en los hijos.
+                             hover-lift: clase custom que sube la tarjeta 5px al hacer hover.
+                             border border-gold/20: borde dorado semitransparente para dar
+                             profundidad sin competir con el contenido. -->
+                        <div class="rounded-xl overflow-hidden group flex flex-col bg-black border border-gold/20 hover-lift">
+
+                            <!-- Contenedor de la imagen.
+                                 overflow-hidden: recorta el zoom del hover dentro del borde.
+                                 aspect-video (16:9): proporcion estandar de pantalla para
+                                 uniformizar la altura de todos los medios del carousel. -->
+                            <div class="overflow-hidden bg-gray-900 aspect-video">
+                                <!-- object-cover: rellena el area 16:9 sin distorsion,
+                                     recortando lo que sobra de la imagen.
+                                     group-hover:scale-105: zoom del 5% al pasar el mouse. -->
+                                <img src="/assets/MyEducInicio.png"
+                                     alt="Diseño de interfaz de usuario — MyEduc"
+                                     class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
                             </div>
-                            <div class="flex space-x-3">
+
+                            <!-- Contenido de la tarjeta. -->
+                            <div class="p-6 flex flex-col">
+                                <h3 class="text-xl font-bold mb-3 text-gold">Diseño de Interfaz de Usuario</h3>
+                                <p class="text-gray-300 mb-6 leading-relaxed">
+                                    Diseño de interfaz moderna para sitio web de cursos en linea. Creado en Canva con
+                                    enfoque en usabilidad, jerarquia visual y experiencia de usuario satisfactoria.
+                                </p>
+                                <div class="flex flex-wrap gap-2 mb-5">
+                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">Canva</span>
+                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">UI Design</span>
+                                </div>
+                                <!-- fa-arrow-up-right-from-square: icono de "enlace externo".
+                                     target="_blank": abre el sitio en una pestaña nueva.
+                                     rel="noopener": evita que la pagina destino acceda al
+                                     objeto window de este sitio (seguridad). -->
                                 <a href="https://ejemplowebsitemio.my.canva.site/myeduc"
-                                   class="text-white hover:text-gold flex items-center" target="_blank">
-                                    <img src="/assets/canva-icon-logo-symbol-free-png.png" alt="Canva" class="w-8 h-8 mr-1">Canva
+                                   target="_blank" rel="noopener"
+                                   class="inline-flex items-center gap-2 text-sm font-bold text-black gold-gradient px-5 py-2.5 rounded-lg hover:opacity-90 transition-all duration-300 self-start">
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                                    Ver Sitio Web
                                 </a>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- ================================================
-                     SLIDE 2 — Tienda de Camisas Online (Las Chemas del Mapa)
-                ================================================ -->
-                <div class="shrink-0 grow-0 basis-[85%] sm:basis-[55%] lg:basis-[420px]">
-                    <div class="project-card rounded-lg overflow-hidden h-full group flex flex-col bg-gray-800">
-                        <div class="aspect-[3/2] overflow-hidden bg-gray-700">
-                            <!-- Los videos tambien reciben el zoom al hover.
-                                 autoplay muted loop playsinline: reproduccion
-                                 automatica sin sonido, en bucle, compatible con
-                                 las politicas de autoplay de iOS y Chrome. -->
-                            <video class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
-                                   autoplay muted loop playsinline>
-                                <source src="/assets/laschemasdelmapa.mp4" type="video/mp4" />
-                            </video>
-                        </div>
-                        <div class="p-6 flex flex-col flex-1">
-                            <h3 class="text-xl font-bold mb-2 text-gold">Tienda de Camisas Online</h3>
-                            <p class="text-white mb-4 flex-1">Las chemas del mapa es una plataforma de comercio electrónico especializada en la venta de camisetas de fútbol (actual y retro), así como de la NBA, NFL, MLB y Fórmula 1. Desarrollada con HTML, CSS (Tailwind + Bootstrap) y JavaScript.</p>
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-gray-700 text-xs text-gold px-3 py-1 rounded-full">HTML</span>
-                                <span class="bg-gray-700 text-xs text-gold px-3 py-1 rounded-full">CSS</span>
-                                <span class="bg-gray-700 text-xs text-gold px-3 py-1 rounded-full">JS</span>
+                    <!-- ================================================
+                         SLIDE 2 — Las Chemas del Mapa (tienda de camisas)
+                    ================================================ -->
+                    <div class="shrink-0 grow-0 basis-[90%] sm:basis-[60%] lg:basis-[420px]">
+                        <div class="rounded-xl overflow-hidden group flex flex-col bg-black border border-gold/20 hover-lift">
+                            <div class="overflow-hidden bg-gray-900 aspect-video">
+                                <!-- video: se reproduce automaticamente sin sonido y en bucle.
+                                     playsinline evita que iOS lo ponga en pantalla completa.
+                                     object-cover rellena el area 16:9 sin barras negras. -->
+                                <video class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
+                                       autoplay muted loop playsinline>
+                                    <source src="/assets/laschemasdelmapa.mp4" type="video/mp4" />
+                                </video>
                             </div>
-                            <div class="flex space-x-3">
-                                <a href="https://github.com/Nserial-killa/LCDM.final"
-                                   class="text-white hover:text-gold flex items-center" target="_blank">
-                                    <i class="fab fa-github mr-1"></i> Repositorio
-                                </a>
+                            <div class="p-6 flex flex-col">
+                                <h3 class="text-xl font-bold mb-3 text-gold">Las Chemas del Mapa</h3>
+                                <p class="text-gray-300 mb-6 leading-relaxed">
+                                    Tienda en linea de camisetas de futbol (actual y retro), NBA, NFL, MLB y Formula 1.
+                                    Desarrollada con HTML, CSS (Tailwind + Bootstrap) y JavaScript.
+                                </p>
+                                <div class="flex flex-wrap gap-2 mb-5">
+                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">HTML</span>
+                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">CSS</span>
+                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">JS</span>
+                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">Bootstrap</span>
+                                </div>
                                 <a href="https://laschemasdelmapa.com/"
-                                   class="text-white hover:text-gold flex items-center" target="_blank">
-                                    <i class="fa-solid fa-eye mr-1"></i> Sitio Web
+                                   target="_blank" rel="noopener"
+                                   class="inline-flex items-center gap-2 text-sm font-bold text-black gold-gradient px-5 py-2.5 rounded-lg hover:opacity-90 transition-all duration-300 self-start">
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                                    Ver Sitio Web
                                 </a>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- ================================================
-                     SLIDE 3 — Pokédex App
-                ================================================ -->
-                <div class="shrink-0 grow-0 basis-[85%] sm:basis-[55%] lg:basis-[420px]">
-                    <div class="project-card rounded-lg overflow-hidden h-full group flex flex-col bg-gray-800">
-                        <div class="aspect-[3/2] overflow-hidden bg-gray-700">
-                            <video class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
-                                   autoplay muted loop playsinline>
-                                <source src="/assets/PokeApi.mp4" type="video/mp4" />
-                            </video>
-                        </div>
-                        <div class="p-6 flex flex-col flex-1">
-                            <h3 class="text-xl font-bold mb-2 text-gold">Pokédex App</h3>
-                            <p class="text-white mb-4 flex-1">Aplicación web que consume la PokéAPI REST para buscar y visualizar información detallada de Pokémon: estadísticas, tipos, habilidades e imágenes, con interfaz moderna y responsive.</p>
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-gray-700 text-xs text-gold px-3 py-1 rounded-full">HTML</span>
-                                <span class="bg-gray-700 text-xs text-gold px-3 py-1 rounded-full">CSS</span>
-                                <span class="bg-gray-700 text-xs text-gold px-3 py-1 rounded-full">JS</span>
-                                <span class="bg-gray-700 text-xs text-gold px-3 py-1 rounded-full">REST API</span>
+                    <!-- ================================================
+                         SLIDE 3 — Pokédex App
+                    ================================================ -->
+                    <div class="shrink-0 grow-0 basis-[90%] sm:basis-[60%] lg:basis-[420px]">
+                        <div class="rounded-xl overflow-hidden group flex flex-col bg-black border border-gold/20 hover-lift">
+                            <div class="overflow-hidden bg-gray-900 aspect-video">
+                                <video class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
+                                       autoplay muted loop playsinline>
+                                    <source src="/assets/PokeApi.mp4" type="video/mp4" />
+                                </video>
+                            </div>
+                            <div class="p-6 flex flex-col">
+                                <h3 class="text-xl font-bold mb-3 text-gold">Pokédex App</h3>
+                                <p class="text-gray-300 mb-6 leading-relaxed">
+                                    Aplicacion web que consume la PokéAPI REST para buscar y visualizar informacion
+                                    detallada de Pokémon: estadisticas, tipos, habilidades e imagenes, con interfaz
+                                    moderna y responsive.
+                                </p>
+                                <div class="flex flex-wrap gap-2 mb-5">
+                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">HTML</span>
+                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">CSS</span>
+                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">JS</span>
+                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">REST API</span>
+                                </div>
+                                <a href="https://pokedex-three-tau-96.vercel.app/"
+                                   target="_blank" rel="noopener"
+                                   class="inline-flex items-center gap-2 text-sm font-bold text-black gold-gradient px-5 py-2.5 rounded-lg hover:opacity-90 transition-all duration-300 self-start">
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                                    Ver Sitio Web
+                                </a>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- ================================================
-                     SLIDE 4 — Tesla App UI
-                ================================================ -->
-                <div class="shrink-0 grow-0 basis-[85%] sm:basis-[55%] lg:basis-[420px]">
-                    <div class="project-card rounded-lg overflow-hidden h-full group flex flex-col bg-gray-800">
-                        <div class="aspect-[3/2] overflow-hidden bg-gray-700">
-                            <video class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
-                                   autoplay muted loop playsinline>
-                                <source src="/assets/VideoCortoTeslaApp.mp4" type="video/mp4" />
-                            </video>
-                        </div>
-                        <div class="p-6 flex flex-col flex-1">
-                            <h3 class="text-xl font-bold mb-2 text-gold">Tesla App UI</h3>
-                            <p class="text-white mb-4 flex-1">Réplica de interfaz de usuario inspirada en el diseño de Tesla, con navegación fluida, animaciones y diseño minimalista de alto impacto visual.</p>
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-gray-700 text-xs text-gold px-3 py-1 rounded-full">HTML</span>
-                                <span class="bg-gray-700 text-xs text-gold px-3 py-1 rounded-full">CSS</span>
-                                <span class="bg-gray-700 text-xs text-gold px-3 py-1 rounded-full">JS</span>
+                    <!-- ================================================
+                         SLIDE 4 — Doja E-commerce
+                    ================================================ -->
+                    <div class="shrink-0 grow-0 basis-[90%] sm:basis-[60%] lg:basis-[420px]">
+                        <div class="rounded-xl overflow-hidden group flex flex-col bg-black border border-gold/20 hover-lift">
+                            <div class="overflow-hidden bg-gray-900 aspect-video">
+                                <video src="/img/doja-video.mp4"
+                                       alt="Doja E-commerce — tienda en línea"
+                                       class="w-full h-full object-cover transition duration-300 group-hover:scale-105" autoplay muted loop>
+                                </video>
+                            </div>
+                            <div class="p-6 flex flex-col">
+                                <h3 class="text-xl font-bold mb-3 text-gold">Doja E-commerce</h3>
+                                <p class="text-gray-300 mb-6 leading-relaxed">
+                                    Tienda en linea con catalogo de productos, carrito de compras y diseño responsive.
+                                    Experiencia de compra fluida, rapida y visualmente atractiva para el mercado
+                                    costarricense.
+                                </p>
+                                <div class="flex flex-wrap gap-2 mb-5">
+                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">HTML</span>
+                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">CSS</span>
+                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">JS</span>
+                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">Next.js</span>
+                                </div>
+                                <a href="https://doja-ecommerce.vercel.app/"
+                                   target="_blank" rel="noopener"
+                                   class="inline-flex items-center gap-2 text-sm font-bold text-black gold-gradient px-5 py-2.5 rounded-lg hover:opacity-90 transition-all duration-300 self-start">
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                                    Ver Sitio Web
+                                </a>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- ================================================
-                     SLIDE 5 — Doja E-commerce
-                ================================================ -->
-                <div class="shrink-0 grow-0 basis-[85%] sm:basis-[55%] lg:basis-[420px]">
-                    <div class="project-card rounded-lg overflow-hidden h-full group flex flex-col bg-gray-800">
-                        <div class="aspect-[3/2] overflow-hidden bg-gray-700">
-                            <video class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
-                                   autoplay muted loop playsinline>
-                                <source src="/img/doja-video.mp4" type="video/mp4" />
-                            </video>
-                        </div>
-                        <div class="p-6 flex flex-col flex-1">
-                            <h3 class="text-xl font-bold mb-2 text-gold">Doja E-commerce</h3>
-                            <p class="text-white mb-4 flex-1">Desarrollo de tienda online para la marca Doja, con experiencia de usuario intuitiva, funcionalidades de compra segura y un estilo moderno y atractivo.</p>
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-gray-700 text-xs text-gold px-3 py-1 rounded-full">HTML</span>
-                                <span class="bg-gray-700 text-xs text-gold px-3 py-1 rounded-full">CSS</span>
-                                <span class="bg-gray-700 text-xs text-gold px-3 py-1 rounded-full">JS</span>
+                    <!-- ================================================
+                         SLIDE 5 — Portafolio Diseñadora (Melissa Tinoco)
+                    ================================================ -->
+                    <div class="shrink-0 grow-0 basis-[90%] sm:basis-[60%] lg:basis-[420px]">
+                        <div class="rounded-xl overflow-hidden group flex flex-col bg-black border border-gold/20 hover-lift">
+                            <div class="overflow-hidden bg-gray-900 aspect-video">
+                                <video src="/img/melissa-portafolio.mp4"
+                                       alt="Portafolio diseñadora — Melissa Tinoco López"
+                                       class="w-full h-full object-cover transition duration-300 group-hover:scale-105" autoplay muted loop>
+                                </video>
+                            </div>
+                            <div class="p-6 flex flex-col">
+                                <h3 class="text-xl font-bold mb-3 text-gold">Portafolio Diseñadora</h3>
+                                <p class="text-gray-300 mb-6 leading-relaxed">
+                                    Sitio web de portafolio personal para diseñadora grafica Melissa Tinoco Lopez.
+                                    Presenta su identidad visual, proyectos de branding y diseño digital con una
+                                    estetica elegante y moderna.
+                                </p>
+                                <div class="flex flex-wrap gap-2 mb-5">
+                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">Diseño UI</span>
+                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">Portafolio</span>
+                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">React</span>
+                                </div>
+                                <a href="https://portafolio-mel-iota.vercel.app/"
+                                   target="_blank" rel="noopener"
+                                   class="inline-flex items-center gap-2 text-sm font-bold text-black gold-gradient px-5 py-2.5 rounded-lg hover:opacity-90 transition-all duration-300 self-start">
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                                    Ver Sitio Web
+                                </a>
                             </div>
                         </div>
                     </div>
+
                 </div>
-
-
-                 <!-- ================================================
-                     SLIDE 6 — Melissa Portfolio
-                ================================================ -->
-                <div class="shrink-0 grow-0 basis-[85%] sm:basis-[55%] lg:basis-[420px]">
-                    <div class="project-card rounded-lg overflow-hidden h-full group flex flex-col bg-gray-800">
-                        <div class="aspect-[3/2] overflow-hidden bg-gray-700">
-                            <video class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
-                                   autoplay muted loop playsinline>
-                                <source src="/img/melissa-portafolio.mp4" type="video/mp4" />
-                            </video>
-                        </div>
-                        <div class="p-6 flex flex-col flex-1">
-                            <h3 class="text-xl font-bold mb-2 text-gold">Portafolio Diseñadora</h3>
-                            <p class="text-white mb-4 flex-1">Desarrollo de portafolio digital para la Diseñadora Melissa Lopez, showcasing su trabajo y experiencia en diseño gráfico y UX.</p>
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-gray-700 text-xs text-gold px-3 py-1 rounded-full">HTML</span>
-                                <span class="bg-gray-700 text-xs text-gold px-3 py-1 rounded-full">CSS</span>
-                                <span class="bg-gray-700 text-xs text-gold px-3 py-1 rounded-full">JS</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
-        </div>
 
-    </div>
-</section>
+        </div>
+    </section>
 
 
 
