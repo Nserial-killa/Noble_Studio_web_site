@@ -147,15 +147,6 @@
             animation: blink 0.7s step-end infinite;
         }
 
-        /* ================================================
-           PARALLAX DEL HERO
-           will-change le avisa al browser que este
-           elemento va a ser animado, permitiendole
-           optimizarlo en la GPU de antemano.
-        ================================================ */
-        #hero-content {
-            will-change: transform;
-        }
 
         /* ================================================
            NUMEROS DE ESTADISTICAS (CONTADORES)
@@ -449,10 +440,8 @@
          overflow-hidden evita que el contenido se vea
          fuera de la seccion cuando el parallax lo mueve.
     ================================================ -->
-    <section id="inicio" class="min-h-screen gradient-bg flex items-center justify-center pt-10 pb-56 overflow-hidden">
+    <section id="inicio" class="min-h-screen gradient-bg flex items-center justify-center pt-10 pb-28 overflow-hidden">
 
-        <!-- id="hero-content": el JS mueve este div con
-             transform para crear el efecto parallax -->
         <div id="hero-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-[2px]">
             <div class="text-center">
 
@@ -1158,29 +1147,6 @@
         });
 
 
-        /* ================================================
-           PARALLAX EN EL HERO
-
-           Al hacer scroll, mueve el contenido del hero
-           MAS LENTO que el scroll real.
-
-           parallaxFactor = 0.4 significa: por cada 100px
-           que el usuario baja, el hero sube solo 40px.
-           Esa diferencia de velocidad crea la ilusion
-           de que el fondo esta "mas lejos".
-
-           Solo aplica mientras el hero es visible
-           (scrollY < window.innerHeight) para no afectar
-           las secciones de abajo.
-        ================================================ */
-        const heroContent    = document.getElementById('hero-content');
-        const parallaxFactor = 0.4;
-
-        window.addEventListener('scroll', () => {
-            if (window.scrollY < window.innerHeight) {
-                heroContent.style.transform = `translateY(${window.scrollY * parallaxFactor}px)`;
-            }
-        });
 
 
         /* ================================================
