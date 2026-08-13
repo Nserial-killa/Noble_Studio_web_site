@@ -5,12 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Noble Studio - Diseño y Desarrollo Digital</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Import map: resuelve "three" a la build ESM por CDN (sin npm/bundler),
-         igual de "sin instalación" que el resto de dependencias del sitio.
-         Debe ir antes de cualquier <script type="module"> del documento. -->
-    <script type="importmap">
-    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
-    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -20,6 +14,19 @@
                         gold: '#FFD700',
                         'gold-dark': '#B8860B',
                         'gold-light': '#FFF8DC'
+                    },
+                    keyframes: {
+                        // Mueve el track de logos exactamente su propio ancho + el
+                        // gap entre copias (ver gap-14 = 3.5rem en #tecnologias),
+                        // asi la copia duplicada del track queda pegada sin salto
+                        // visible.
+                        'logo-cloud': {
+                            from: { transform: 'translateX(0)' },
+                            to: { transform: 'translateX(calc(-100% - 3.5rem))' }
+                        }
+                    },
+                    animation: {
+                        'logo-cloud': 'logo-cloud 30s linear infinite'
                     }
                 }
             }
@@ -103,6 +110,17 @@
         .fade-in.visible {
             opacity: 1;
             transform: translateY(0);
+        }
+
+        /* ================================================
+           MASCARA DE DESVANECIDO — seccion Tecnologias
+           Difumina los bordes izquierdo/derecho del carrusel
+           de logos para que las tarjetas no aparezcan/desaparezcan
+           de golpe en los extremos, solo se note el loop continuo.
+        ================================================ */
+        .logo-cloud-mask {
+            mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
         }
 
         /* ================================================
@@ -382,10 +400,13 @@
             .ala-aleteo,
             .logo-sombra {
                 animation: none;
-                
+
             }
             .logo-navbar {
                 transition: none;
+            }
+            .animate-logo-cloud {
+                animation: none;
             }
         }
     </style>
@@ -617,13 +638,8 @@
          Carousel horizontal con Embla (ver JS al final).
          Fondo negro contrasta con bg-gray-900 de Servicios.
     ================================================ -->
-    <section id="projects" class="py-20 bg-black relative overflow-hidden">
-        <!-- Fondo animado "grid scan" (Three.js, ver js/projects-grid-scan-bg.js).
-             pointer-events-none: el canvas no debe interceptar clicks/drag
-             del carousel de Embla ni de los botones prev/next. -->
-        <div id="projects-bg" class="absolute inset-0 z-0 pointer-events-none"></div>
-
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="projects" class="py-20 bg-black">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
             <!-- Encabezado + botones de navegacion del carousel.
                  flex-col en movil: titulo arriba, botones abajo centrados.
@@ -863,8 +879,72 @@
         </div>
     </section>
 
+    <!-- ================================================
+         SECCIÓN TECNOLOGÍAS
+         "Logo cloud" con scroll horizontal infinito, hecho
+         solo con CSS (sin libreria externa): el track de abajo
+         se clona varias veces por JS (ver IIFE junto al carousel
+         de Embla) y la animacion "animate-logo-cloud" (definida
+         en tailwind.config, <head>) mueve cada copia exactamente
+         su propio ancho + el gap, asi la siguiente copia queda
+         pegada donde termino la anterior y el loop no se nota.
 
+         brightness-0 invert: convierte cada logo (sin importar
+         si el SVG original era negro, de color o blanco) en una
+         silueta blanca solida, para que todos se vean parejos
+         sobre el fondo oscuro.
+    ================================================ -->
+    <section id="tecnologias" class="py-20 bg-gray-900 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold text-white">
+                    Tecnologías <span class="text-gold">que Usamos</span>
+                </h2>
+                <p class="text-gray-400 mt-3">
+                    Las herramientas y lenguajes con los que construimos cada proyecto.
+                </p>
+            </div>
 
+            <!-- logo-cloud-mask: difumina los bordes izq/der (ver <style>).
+                 id="tech-logos-track": el JS busca este contenedor y clona
+                 su primer (y unico) div hijo para armar el loop continuo.
+
+                 h-14 w-auto: alto parejo para todos los logos, ancho libre
+                 segun su proporcion original (evita distorsionar los que
+                 son mas anchos, como el wordmark de Supabase).
+
+                 Vercel y Tailwind CSS llevan h-24: sus SVG traen un
+                 "viewBox" cuadrado con bastante relleno transparente
+                 arriba/abajo del dibujo real, asi que a la misma altura
+                 que los demas se ven chicos; con h-24 el trazo queda del
+                 mismo tamano visual que el resto.
+
+                 Se dejan los colores de marca originales de cada SVG (se
+                 ven bien sobre el fondo oscuro); Linux, VS Code y GitHub
+                 llevan el filtro "invert" porque sus colores originales
+                 (negro solido o azules muy oscuros) casi no se veian
+                 sobre el fondo oscuro de la seccion. -->
+            <div id="tech-logos-track" class="logo-cloud-mask relative flex gap-14 fade-in">
+                <div class="flex shrink-0 animate-logo-cloud items-center gap-14">
+                    <img src="/svg/linux-tux-svgrepo-com.svg" alt="Linux" class="h-16 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
+                    <img src="/svg/visual-studio-code-svgrepo-com.svg" alt="Visual Studio Code" class="h-16 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
+                    <img src="/svg/react-svgrepo-com.svg" alt="React" class="h-16 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
+                    <img src="/svg/supabase-logo-wordmark--dark.svg" alt="Supabase" class="h-10 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
+                    <img src="/svg/html-5-svgrepo-com.svg" alt="HTML" class="h-16 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
+                    <img src="/svg/css-3-svgrepo-com.svg" alt="CSS" class="h-16 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
+                    <img src="/svg/tailwindcss-svgrepo-com.svg" alt="Tailwind CSS" class="h-56 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
+                    <img src="/svg/bootstrap-svgrepo-com.svg" alt="Bootstrap" class="h-16 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
+                    <img src="/svg/js-svgrepo-com.svg" alt="JavaScript" class="h-16 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
+                    <img src="/svg/typescript-official-svgrepo-com.svg" alt="TypeScript" class="h-16 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
+                    <img src="/svg/git-svgrepo-com.svg" alt="Git" class="h-16 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
+                    <img src="/svg/github-142-svgrepo-com.svg" alt="GitHub" class="h-16 w-auto object-contain invert opacity-90 hover:opacity-100 transition-opacity">
+                    <img src="/svg/vercel-svgrepo-com.svg" alt="Vercel" class="h-32 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
+                    <img src="/svg/canva-icon.svg" alt="Canva" class="h-16 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
+
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Team Section -->
     <!-- <section id="equipo" class="py-20 bg-black">
@@ -1025,15 +1105,6 @@
             </div>
         </div>
     </footer>
-
-    <!-- Fondo animado "grid scan" de la seccion #projects (Three.js, ver
-         js/projects-grid-scan-bg.js). Modulo ES cargado via el importmap
-         del <head>; se auto-inicializa sobre #projects-bg si existe. -->
-    <script type="module">
-        import { initGridScanBackground } from '/js/projects-grid-scan-bg.js';
-        const bgContainer = document.getElementById('projects-bg');
-        if (bgContainer) initGridScanBackground(bgContainer);
-    </script>
 
     <!-- Embla Carousel (vanilla UMD): misma libreria que usa Gallery6, sin React ni bundler -->
     <script src="https://cdn.jsdelivr.net/npm/embla-carousel@8/embla-carousel.umd.js"></script>
@@ -1326,6 +1397,35 @@
             emblaApi.on('select', actualizarBotones);
             emblaApi.on('reInit', actualizarBotones);
             actualizarBotones(); // estado inicial: deshabilita "prev" al arrancar
+        }());
+
+
+        /* ================================================
+           LOGO CLOUD: clona el track de tecnologias
+
+           El HTML solo trae un track (13 logos) para no repetir
+           las mismas 13 etiquetas <img> varias veces a mano.
+           Este IIFE lo clona 3 veces mas (4 copias en total,
+           una detras de otra) para que, sin importar el ancho
+           de pantalla, siempre haya suficientes copias cubriendo
+           el viewport mientras la animacion CSS "animate-logo-cloud"
+           las desplaza — el efecto de scroll infinito depende de
+           que nunca se vea un hueco vacio en ningun punto del loop.
+
+           Los clones llevan aria-hidden porque repiten el mismo
+           contenido que el track original (ya anunciado una vez
+           a lectores de pantalla).
+        ================================================ */
+        (function () {
+            const wrapper = document.getElementById('tech-logos-track');
+            const originalTrack = wrapper && wrapper.querySelector(':scope > div');
+            if (!wrapper || !originalTrack) return;
+
+            for (let i = 0; i < 3; i++) {
+                const clone = originalTrack.cloneNode(true);
+                clone.setAttribute('aria-hidden', 'true');
+                wrapper.appendChild(clone);
+            }
         }());
 
     </script>
