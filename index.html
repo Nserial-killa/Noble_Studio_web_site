@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Noble Studio - Diseño y Desarrollo Digital</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Import map: resuelve "three" a la build ESM por CDN (sin npm/bundler),
+         igual de "sin instalación" que el resto de dependencias del sitio.
+         Debe ir antes de cualquier <script type="module"> del documento. -->
+    <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -539,14 +545,14 @@
     </section>
 
     <!-- Services Section -->
-    <section id="servicios" class="py-20 bg-gray-100">
+    <section id="servicios" class="py-20 bg-black">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 fade-in">
                 <h2 class="text-4xl md:text-5xl font-bold mb-6">
-                    <span class="text-black">Nuestros</span>
+                    <span class="text-white">Nuestros</span>
                      <span class="text-gold">Servicios</span>
                 </h2>
-                <p class="text-xl text-gray-900 max-w-3xl mx-auto">
+                <p class="text-xl text-gray-100 max-w-3xl mx-auto">
                     Ofrecemos soluciones innovadoras de diseño y desarrollo digital para impulsar tu negocio al siguiente nivel.
                 </p>
             </div>
@@ -611,8 +617,13 @@
          Carousel horizontal con Embla (ver JS al final).
          Fondo negro contrasta con bg-gray-900 de Servicios.
     ================================================ -->
-    <section id="projects" class="py-20 bg-black">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="projects" class="py-20 bg-black relative overflow-hidden">
+        <!-- Fondo animado "grid scan" (Three.js, ver js/projects-grid-scan-bg.js).
+             pointer-events-none: el canvas no debe interceptar clicks/drag
+             del carousel de Embla ni de los botones prev/next. -->
+        <div id="projects-bg" class="absolute inset-0 z-0 pointer-events-none"></div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
             <!-- Encabezado + botones de navegacion del carousel.
                  flex-col en movil: titulo arriba, botones abajo centrados.
@@ -1014,6 +1025,15 @@
             </div>
         </div>
     </footer>
+
+    <!-- Fondo animado "grid scan" de la seccion #projects (Three.js, ver
+         js/projects-grid-scan-bg.js). Modulo ES cargado via el importmap
+         del <head>; se auto-inicializa sobre #projects-bg si existe. -->
+    <script type="module">
+        import { initGridScanBackground } from '/js/projects-grid-scan-bg.js';
+        const bgContainer = document.getElementById('projects-bg');
+        if (bgContainer) initGridScanBackground(bgContainer);
+    </script>
 
     <!-- Embla Carousel (vanilla UMD): misma libreria que usa Gallery6, sin React ni bundler -->
     <script src="https://cdn.jsdelivr.net/npm/embla-carousel@8/embla-carousel.umd.js"></script>
