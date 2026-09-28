@@ -80,33 +80,6 @@
         }
 
         /* ================================================
-           GRADIENTE ANIMADO (banda oscura del footer)
-
-           @keyframes define una animacion con nombre.
-           Aqui movemos la "posicion" del fondo de
-           izquierda a derecha y vuelta, dando efecto
-           de flujo de color.
-
-           El truco: background-size: 400% 400% crea un
-           lienzo de fondo 4x mas grande que el elemento.
-           La animacion mueve background-position dentro
-           de ese lienzo gigante.
-
-           Ya no se usa en el hero ni en #contacto (ahora
-           blancos/claros); queda solo para la banda oscura
-           intencional del footer.
-        ================================================ */
-        @keyframes gradientShift {
-            0%   { background-position: 0% 50%; }
-            50%  { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .gradient-bg {
-            background: #000000;
-        }
-
-        /* ================================================
            GRADIENTE DORADO
            Usado en botones, iconos y avatares del equipo.
         ================================================ */
