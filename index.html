@@ -202,11 +202,13 @@
            NAVBAR: efecto al hacer scroll
            La clase .scrolled se agrega/quita con JS
            segun si el usuario scrolleo mas de 50px.
-           box-shadow da la sombra dorada sutil abajo.
+           Blur y fondo mas opacos + sombra suave para
+           despegar la barra del contenido debajo.
         ================================================ */
         nav.scrolled {
-            background: #000000 !important;
-            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.15);
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 20px rgba(26, 26, 26, 0.08);
         }
 
         /* ================================================
@@ -453,20 +455,20 @@
     </a> -->
 
     <!-- Navigation -->
-    <nav class="fixed top-0 w-full bg-black z-50 border-b border-gold/20">
+    <nav class="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-gold/30">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center space-x-3">
                     <img src="/img/noble-studio-logo.png" class="h-28 logo-navbar" alt="Logo Noble Studio">
-                    <span class="text-xl font-bold text-gold">Noble Studio</span>
+                    <span class="text-xl font-bold text-gold-deep">Noble Studio</span>
                 </div>
                 <div class="hidden md:flex space-x-8">
-                    <a href="#inicio" class="text-white hover:text-gold transition-colors">Inicio</a>
-                    <a href="#servicios" class="text-white hover:text-gold transition-colors">Servicios</a>
-                    <a href="#projects" class="text-white hover:text-gold transition-colors">Proyectos</a>
-                    <a href="#contacto" class="text-white hover:text-gold transition-colors">Contacto</a>
+                    <a href="#inicio" class="text-ink hover:text-gold-ink transition-colors">Inicio</a>
+                    <a href="#servicios" class="text-ink hover:text-gold-ink transition-colors">Servicios</a>
+                    <a href="#projects" class="text-ink hover:text-gold-ink transition-colors">Proyectos</a>
+                    <a href="#contacto" class="text-ink hover:text-gold-ink transition-colors">Contacto</a>
                 </div>
-                <button id="menu-btn" class="md:hidden text-gold">
+                <button id="menu-btn" class="md:hidden text-gold-deep" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
@@ -474,13 +476,12 @@
             </div>
         </div>
         <!-- Mobile menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-black border-t border-gold/20">
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gold/30">
             <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="#inicio" class="block px-3 py-2 text-white hover:text-gold transition-colors">Inicio</a>
-                <a href="#servicios" class="block px-3 py-2 text-white hover:text-gold transition-colors">Servicios</a>
-                <a href="#projects" class="block px-3 py-2 text-white hover:text-gold transition-colors">Proyectos</a>
-                <a href="#equipo" class="block px-3 py-2 text-white hover:text-gold transition-colors">Equipo</a>
-                <a href="#contacto" class="block px-3 py-2 text-white hover:text-gold transition-colors">Contacto</a>
+                <a href="#inicio" class="block px-3 py-2 text-ink hover:text-gold-ink transition-colors">Inicio</a>
+                <a href="#servicios" class="block px-3 py-2 text-ink hover:text-gold-ink transition-colors">Servicios</a>
+                <a href="#projects" class="block px-3 py-2 text-ink hover:text-gold-ink transition-colors">Proyectos</a>
+                <a href="#contacto" class="block px-3 py-2 text-ink hover:text-gold-ink transition-colors">Contacto</a>
             </div>
         </div>
     </nav>
@@ -1293,7 +1294,8 @@
         const mobileMenu = document.getElementById('mobile-menu');
 
         menuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
+            const abierto = mobileMenu.classList.toggle('hidden') === false;
+            menuBtn.setAttribute('aria-expanded', abierto ? 'true' : 'false');
         });
 
 
@@ -1316,6 +1318,7 @@
                 if (target) {
                     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     mobileMenu.classList.add('hidden'); // cierra el menu mobile si estaba abierto
+                    menuBtn.setAttribute('aria-expanded', 'false');
                 }
             });
         });
