@@ -396,6 +396,14 @@
             .animate-logo-cloud {
                 animation: none;
             }
+            /* Refuerzo por si el JS del tween coverflow tuviera algun
+               bug: garantiza que ningun slide del carousel quede
+               escalado/atenuado cuando el usuario pidio menos
+               movimiento (el JS tampoco ejecuta el tween en ese caso). */
+            .projects-slide-inner {
+                transform: none !important;
+                opacity: 1 !important;
+            }
         }
     </style>
 </head>
@@ -653,239 +661,286 @@
     <section id="projects" class="py-20 bg-black">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            <!-- Encabezado + botones de navegacion del carousel.
-                 flex-col en movil: titulo arriba, botones abajo centrados.
-                 md:flex-row en desktop: titulo a la izquierda, botones a la derecha.
-                 fade-in: el IntersectionObserver del JS lo anima al entrar al viewport. -->
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 fade-in">
-                <div>
-                    <h2 class="text-4xl md:text-5xl font-bold text-center md:text-left text-white">
-                        Proyectos <span class="text-gold">Destacados</span>
-                    </h2>
-                    <p class="text-gray-400 mt-3 text-center md:text-left">
-                        Una seleccion de trabajos que reflejan nuestra capacidad creativa y tecnica.
-                    </p>
-                </div>
-
-                <!-- Botones prev/next de navegacion del carousel.
-                     Las clases disabled:* de Tailwind aplican estilos cuando
-                     el atributo HTML "disabled" esta presente en el elemento.
-                     El JS los activa/desactiva segun la posicion del carousel. -->
-                <div class="flex gap-3 mt-8 md:mt-0 self-center md:self-auto">
-                    <button id="projects-prev" aria-label="Proyecto anterior"
-                        class="w-11 h-11 rounded-full border border-gold/50 text-gold flex items-center justify-center transition-all duration-300 hover:bg-gold hover:text-black disabled:opacity-30 disabled:pointer-events-none">
-                        <i class="fa-solid fa-arrow-left"></i>
-                    </button>
-                    <button id="projects-next" aria-label="Siguiente proyecto"
-                        class="w-11 h-11 rounded-full border border-gold/50 text-gold flex items-center justify-center transition-all duration-300 hover:bg-gold hover:text-black disabled:opacity-30 disabled:pointer-events-none">
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                </div>
+            <div class="text-center md:text-left mb-12 fade-in">
+                <h2 class="font-display text-4xl md:text-5xl font-bold text-white">
+                    Proyectos <span class="text-gold">Destacados</span>
+                </h2>
+                <p class="text-gray-400 mt-3">
+                    Una seleccion de trabajos que reflejan nuestra capacidad creativa y tecnica.
+                </p>
             </div>
 
-            <!-- Viewport del carousel.
-                 overflow-hidden oculta los slides que estan fuera del area visible,
-                 creando el efecto de "peek" (asomo) de la siguiente tarjeta sin
-                 que la pagina haga scroll horizontal.
-                 cursor-grab/grabbing da retroalimentacion visual al arrastrar. -->
-            <div class="overflow-hidden cursor-grab active:cursor-grabbing" id="projects-carousel">
+            <!-- ================================================
+                 REGION DEL CAROUSEL (coverflow + autoplay)
 
-                <!-- Embla mueve este contenedor flex horizontalmente con CSS transforms.
-                     gap-6 = 24px de separacion entre tarjetas. -->
-                <div class="flex gap-6 items-start">
+                 tabindex + role + aria-label: WAI-ARIA carousel
+                 pattern basico, permite foco de teclado con Tab
+                 y ancla el "rootNode" del plugin de autoplay (asi
+                 pasar el mouse por los dots/contador/barra tambien
+                 pausa el autoplay, no solo el viewport).
+            ================================================ -->
+            <div id="projects-carousel-region" tabindex="0" role="region"
+                 aria-roledescription="carousel" aria-label="Carousel de proyectos destacados"
+                 class="outline-none focus-visible:ring-2 focus-visible:ring-gold/60 rounded-xl">
 
-                    <!-- ================================================
-                         SLIDE 1 — Diseño de Interfaz de Usuario (MyEduc)
+                <!-- Viewport del carousel. overflow-hidden oculta los slides
+                     fuera del area visible. align:'center' (JS) + loop:true
+                     centran el slide activo grande y dejan asomar los vecinos
+                     mas chicos y opacos (efecto coverflow). -->
+                <div class="overflow-hidden cursor-grab active:cursor-grabbing" id="projects-carousel">
 
-                         basis-[90%]: en movil ocupa el 90% del ancho,
-                         mostrando un asomo de la siguiente tarjeta.
-                         sm:basis-[60%]: en tablet se ven ~1.6 tarjetas.
-                         lg:basis-[420px]: en desktop ancho fijo de 420px;
-                         en ~1200px de contenedor se ven aprox. 2.5 tarjetas.
-                    ================================================ -->
-                    <div class="shrink-0 grow-0 basis-[90%] sm:basis-[60%] lg:basis-[420px]">
-                        <!-- group: activa los estilos group-hover:* en los hijos.
-                             hover-lift: clase custom que sube la tarjeta 5px al hacer hover.
-                             border border-gold/20: borde dorado semitransparente para dar
-                             profundidad sin competir con el contenido. -->
-                        <div class="rounded-xl overflow-hidden group flex flex-col bg-black border border-gold/20 hover-lift">
+                    <!-- Embla mueve este contenedor flex horizontalmente con CSS transforms. -->
+                    <div class="flex gap-6 items-center">
 
-                            <!-- Contenedor de la imagen.
-                                 overflow-hidden: recorta el zoom del hover dentro del borde.
-                                 aspect-video (16:9): proporcion estandar de pantalla para
-                                 uniformizar la altura de todos los medios del carousel. -->
-                            <div class="overflow-hidden bg-gray-900 aspect-video">
-                                <!-- object-cover: rellena el area 16:9 sin distorsion,
-                                     recortando lo que sobra de la imagen.
-                                     group-hover:scale-105: zoom del 5% al pasar el mouse. -->
-                                <img src="/assets/MyEducInicio.png"
-                                     alt="Diseño de interfaz de usuario — MyEduc"
-                                     class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
-                            </div>
+                        <!-- ================================================
+                             SLIDE 1 — Diseño de Interfaz de Usuario (MyEduc)
 
-                            <!-- Contenido de la tarjeta. -->
-                            <div class="p-6 flex flex-col">
-                                <h3 class="text-xl font-bold mb-3 text-gold">Diseño de Interfaz de Usuario</h3>
-                                <p class="text-gray-300 mb-6 leading-relaxed">
-                                    Diseño de interfaz moderna para sitio web de cursos en linea. Creado en Canva con
-                                    enfoque en usabilidad, jerarquia visual y experiencia de usuario satisfactoria.
-                                </p>
-                                <div class="flex flex-wrap gap-2 mb-5">
-                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">Canva</span>
-                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">UI Design</span>
+                             data-tipo: "cliente" o "conceptual", leido por el
+                             JS del carousel para pintar el badge honesto sobre
+                             cada tarjeta. Facil de corregir aqui si el tipo
+                             de proyecto no es el correcto.
+
+                             basis-[78%]/[62%]/[460px]: ancho del slide segun
+                             breakpoint, deja espacio para que los vecinos
+                             asomen a los lados en el efecto coverflow.
+                        ================================================ -->
+                        <div class="shrink-0 grow-0 basis-[78%] sm:basis-[62%] lg:basis-[460px]" data-tipo="conceptual">
+                            <!-- group: activa los estilos group-hover:* en los hijos.
+                                 projects-slide-inner: objetivo del tween de escala/opacidad
+                                 (JS), nunca el div de arriba que Embla mide para su layout.
+                                 hover-lift: clase custom que sube la tarjeta al hover. -->
+                            <div class="projects-slide-inner rounded-xl overflow-hidden group flex flex-col bg-black border border-gold/20 hover-lift">
+
+                                <!-- Contenedor de la imagen. relative: ancla el badge
+                                     y el overlay degradado. aspect-video (16:9). -->
+                                <div class="relative overflow-hidden bg-gray-900 aspect-video">
+                                    <img src="/assets/MyEducInicio.png"
+                                         alt="Diseño de interfaz de usuario — MyEduc"
+                                         loading="lazy"
+                                         class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
+                                    <!-- Badge honesto: el JS lo llena leyendo data-tipo del slide. -->
+                                    <span class="proyecto-badge absolute top-3 left-3 z-10 text-xs font-semibold px-3 py-1 rounded-full bg-white/90 text-ink backdrop-blur-sm"></span>
+                                    <!-- Overlay degradado: aparece al pasar el mouse (desktop),
+                                         repite el titulo como preview. La info completa sigue
+                                         siempre visible debajo, sin depender del hover. -->
+                                    <div class="absolute inset-0 flex items-end p-4 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                                        <h4 class="font-display text-white font-bold text-lg">Diseño de Interfaz de Usuario</h4>
+                                    </div>
                                 </div>
-                                <!-- fa-arrow-up-right-from-square: icono de "enlace externo".
-                                     target="_blank": abre el sitio en una pestaña nueva.
-                                     rel="noopener": evita que la pagina destino acceda al
-                                     objeto window de este sitio (seguridad). -->
-                                <a href="https://ejemplowebsitemio.my.canva.site/myeduc"
-                                   target="_blank" rel="noopener"
-                                   class="inline-flex items-center gap-2 text-sm font-bold text-black gold-gradient px-5 py-2.5 rounded-lg hover:opacity-90 transition-all duration-300 self-start">
-                                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
-                                    Ver Sitio Web
-                                </a>
+
+                                <!-- Contenido de la tarjeta. -->
+                                <div class="p-6 flex flex-col">
+                                    <h3 class="text-xl font-bold mb-3 text-gold">Diseño de Interfaz de Usuario</h3>
+                                    <p class="text-gray-300 mb-6 leading-relaxed">
+                                        Diseño de interfaz moderna para sitio web de cursos en linea. Creado en Canva con
+                                        enfoque en usabilidad, jerarquia visual y experiencia de usuario satisfactoria.
+                                    </p>
+                                    <div class="flex flex-wrap gap-2 mb-5">
+                                        <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">Canva</span>
+                                        <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">UI Design</span>
+                                    </div>
+                                    <a href="https://ejemplowebsitemio.my.canva.site/myeduc"
+                                       target="_blank" rel="noopener"
+                                       class="inline-flex items-center gap-2 text-sm font-bold text-black gold-gradient px-5 py-2.5 rounded-lg hover:opacity-90 transition-all duration-300 self-start">
+                                        <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                                        Ver Sitio Web
+                                    </a>
+                                </div>
                             </div>
                         </div>
+
+                        <!-- ================================================
+                             SLIDE 2 — Las Chemas del Mapa (tienda de camisas)
+                        ================================================ -->
+                        <div class="shrink-0 grow-0 basis-[78%] sm:basis-[62%] lg:basis-[460px]" data-tipo="cliente">
+                            <div class="projects-slide-inner rounded-xl overflow-hidden group flex flex-col bg-black border border-gold/20 hover-lift">
+                                <div class="relative overflow-hidden bg-gray-900 aspect-video">
+                                    <!-- preload="metadata": no descarga el video completo de
+                                         entrada, el JS del carousel lo reproduce solo cuando
+                                         su slide esta activo (ver evento 'select'). -->
+                                    <video class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
+                                           muted loop playsinline preload="metadata">
+                                        <source src="/assets/laschemasdelmapa.mp4" type="video/mp4" />
+                                    </video>
+                                    <span class="proyecto-badge absolute top-3 left-3 z-10 text-xs font-semibold px-3 py-1 rounded-full bg-white/90 text-ink backdrop-blur-sm"></span>
+                                    <div class="absolute inset-0 flex items-end p-4 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                                        <h4 class="font-display text-white font-bold text-lg">Las Chemas del Mapa</h4>
+                                    </div>
+                                </div>
+                                <div class="p-6 flex flex-col">
+                                    <h3 class="text-xl font-bold mb-3 text-gold">Las Chemas del Mapa</h3>
+                                    <p class="text-gray-300 mb-6 leading-relaxed">
+                                        Tienda en linea de camisetas de futbol (actual y retro), NBA, NFL, MLB y Formula 1.
+                                        Desarrollada con HTML, CSS (Tailwind + Bootstrap) y JavaScript.
+                                    </p>
+                                    <div class="flex flex-wrap gap-2 mb-5">
+                                        <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">HTML</span>
+                                        <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">CSS</span>
+                                        <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">JS</span>
+                                        <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">Bootstrap</span>
+                                    </div>
+                                    <a href="https://laschemasdelmapa.com/"
+                                       target="_blank" rel="noopener"
+                                       class="inline-flex items-center gap-2 text-sm font-bold text-black gold-gradient px-5 py-2.5 rounded-lg hover:opacity-90 transition-all duration-300 self-start">
+                                        <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                                        Ver Sitio Web
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ================================================
+                             SLIDE 3 — Pokédex App
+                        ================================================ -->
+                        <div class="shrink-0 grow-0 basis-[78%] sm:basis-[62%] lg:basis-[460px]" data-tipo="conceptual">
+                            <div class="projects-slide-inner rounded-xl overflow-hidden group flex flex-col bg-black border border-gold/20 hover-lift">
+                                <div class="relative overflow-hidden bg-gray-900 aspect-video">
+                                    <video class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
+                                           muted loop playsinline preload="metadata">
+                                        <source src="/assets/PokeApi.mp4" type="video/mp4" />
+                                    </video>
+                                    <span class="proyecto-badge absolute top-3 left-3 z-10 text-xs font-semibold px-3 py-1 rounded-full bg-white/90 text-ink backdrop-blur-sm"></span>
+                                    <div class="absolute inset-0 flex items-end p-4 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                                        <h4 class="font-display text-white font-bold text-lg">Pokédex App</h4>
+                                    </div>
+                                </div>
+                                <div class="p-6 flex flex-col">
+                                    <h3 class="text-xl font-bold mb-3 text-gold">Pokédex App</h3>
+                                    <p class="text-gray-300 mb-6 leading-relaxed">
+                                        Aplicacion web que consume la PokéAPI REST para buscar y visualizar informacion
+                                        detallada de Pokémon: estadisticas, tipos, habilidades e imagenes, con interfaz
+                                        moderna y responsive.
+                                    </p>
+                                    <div class="flex flex-wrap gap-2 mb-5">
+                                        <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">HTML</span>
+                                        <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">CSS</span>
+                                        <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">JS</span>
+                                        <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">REST API</span>
+                                    </div>
+                                    <a href="https://pokedex-three-tau-96.vercel.app/"
+                                       target="_blank" rel="noopener"
+                                       class="inline-flex items-center gap-2 text-sm font-bold text-black gold-gradient px-5 py-2.5 rounded-lg hover:opacity-90 transition-all duration-300 self-start">
+                                        <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                                        Ver Sitio Web
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ================================================
+                             SLIDE 4 — Doja E-commerce
+                        ================================================ -->
+                        <div class="shrink-0 grow-0 basis-[78%] sm:basis-[62%] lg:basis-[460px]" data-tipo="conceptual">
+                            <div class="projects-slide-inner rounded-xl overflow-hidden group flex flex-col bg-black border border-gold/20 hover-lift">
+                                <div class="relative overflow-hidden bg-gray-900 aspect-video">
+                                    <video class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
+                                           muted loop playsinline preload="metadata">
+                                        <source src="/img/doja-video.mp4" type="video/mp4" />
+                                    </video>
+                                    <span class="proyecto-badge absolute top-3 left-3 z-10 text-xs font-semibold px-3 py-1 rounded-full bg-white/90 text-ink backdrop-blur-sm"></span>
+                                    <div class="absolute inset-0 flex items-end p-4 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                                        <h4 class="font-display text-white font-bold text-lg">Doja E-commerce</h4>
+                                    </div>
+                                </div>
+                                <div class="p-6 flex flex-col">
+                                    <h3 class="text-xl font-bold mb-3 text-gold">Doja E-commerce</h3>
+                                    <p class="text-gray-300 mb-6 leading-relaxed">
+                                        Tienda en linea con catalogo de productos, carrito de compras y diseño responsive.
+                                        Experiencia de compra fluida, rapida y visualmente atractiva para el mercado
+                                        costarricense.
+                                    </p>
+                                    <div class="flex flex-wrap gap-2 mb-5">
+                                        <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">HTML</span>
+                                        <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">CSS</span>
+                                        <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">JS</span>
+                                        <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">Next.js</span>
+                                    </div>
+                                    <a href="https://doja-ecommerce.vercel.app/"
+                                       target="_blank" rel="noopener"
+                                       class="inline-flex items-center gap-2 text-sm font-bold text-black gold-gradient px-5 py-2.5 rounded-lg hover:opacity-90 transition-all duration-300 self-start">
+                                        <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                                        Ver Sitio Web
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ================================================
+                             SLIDE 5 — Portafolio Diseñadora (Melissa Tinoco)
+                             Sigue comentado: no se reactiva sin confirmacion.
+                        ================================================ -->
+                        <!-- <div class="shrink-0 grow-0 basis-[78%] sm:basis-[62%] lg:basis-[460px]" data-tipo="cliente">
+                            <div class="projects-slide-inner rounded-xl overflow-hidden group flex flex-col bg-black border border-gold/20 hover-lift">
+                                <div class="relative overflow-hidden bg-gray-900 aspect-video">
+                                    <video class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
+                                           muted loop playsinline preload="metadata">
+                                        <source src="/img/melissa-portafolio.mp4" type="video/mp4" />
+                                    </video>
+                                    <span class="proyecto-badge absolute top-3 left-3 z-10 text-xs font-semibold px-3 py-1 rounded-full bg-white/90 text-ink backdrop-blur-sm"></span>
+                                    <div class="absolute inset-0 flex items-end p-4 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                                        <h4 class="font-display text-white font-bold text-lg">Portafolio Diseñadora</h4>
+                                    </div>
+                                </div>
+                                <div class="p-6 flex flex-col">
+                                    <h3 class="text-xl font-bold mb-3 text-gold">Portafolio Diseñadora</h3>
+                                    <p class="text-gray-300 mb-6 leading-relaxed">
+                                        Sitio web de portafolio personal para diseñadora grafica Melissa Tinoco Lopez.
+                                        Presenta su identidad visual, proyectos de branding y diseño digital con una
+                                        estetica elegante y moderna.
+                                    </p>
+                                    <div class="flex flex-wrap gap-2 mb-5">
+                                        <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">Diseño UI</span>
+                                        <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">Portafolio</span>
+                                        <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">React</span>
+                                    </div>
+                                    <a href="https://portafolio-mel-iota.vercel.app/"
+                                       target="_blank" rel="noopener"
+                                       class="inline-flex items-center gap-2 text-sm font-bold text-black gold-gradient px-5 py-2.5 rounded-lg hover:opacity-90 transition-all duration-300 self-start">
+                                        <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                                        Ver Sitio Web
+                                    </a>
+                                </div>
+                            </div>
+                        </div> -->
+
                     </div>
-
-                    <!-- ================================================
-                         SLIDE 2 — Las Chemas del Mapa (tienda de camisas)
-                    ================================================ -->
-                    <div class="shrink-0 grow-0 basis-[90%] sm:basis-[60%] lg:basis-[420px]">
-                        <div class="rounded-xl overflow-hidden group flex flex-col bg-black border border-gold/20 hover-lift">
-                            <div class="overflow-hidden bg-gray-900 aspect-video">
-                                <!-- video: se reproduce automaticamente sin sonido y en bucle.
-                                     playsinline evita que iOS lo ponga en pantalla completa.
-                                     object-cover rellena el area 16:9 sin barras negras. -->
-                                <video class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
-                                       autoplay muted loop playsinline>
-                                    <source src="/assets/laschemasdelmapa.mp4" type="video/mp4" />
-                                </video>
-                            </div>
-                            <div class="p-6 flex flex-col">
-                                <h3 class="text-xl font-bold mb-3 text-gold">Las Chemas del Mapa</h3>
-                                <p class="text-gray-300 mb-6 leading-relaxed">
-                                    Tienda en linea de camisetas de futbol (actual y retro), NBA, NFL, MLB y Formula 1.
-                                    Desarrollada con HTML, CSS (Tailwind + Bootstrap) y JavaScript.
-                                </p>
-                                <div class="flex flex-wrap gap-2 mb-5">
-                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">HTML</span>
-                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">CSS</span>
-                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">JS</span>
-                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">Bootstrap</span>
-                                </div>
-                                <a href="https://laschemasdelmapa.com/"
-                                   target="_blank" rel="noopener"
-                                   class="inline-flex items-center gap-2 text-sm font-bold text-black gold-gradient px-5 py-2.5 rounded-lg hover:opacity-90 transition-all duration-300 self-start">
-                                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
-                                    Ver Sitio Web
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ================================================
-                         SLIDE 3 — Pokédex App
-                    ================================================ -->
-                    <div class="shrink-0 grow-0 basis-[90%] sm:basis-[60%] lg:basis-[420px]">
-                        <div class="rounded-xl overflow-hidden group flex flex-col bg-black border border-gold/20 hover-lift">
-                            <div class="overflow-hidden bg-gray-900 aspect-video">
-                                <video class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
-                                       autoplay muted loop playsinline>
-                                    <source src="/assets/PokeApi.mp4" type="video/mp4" />
-                                </video>
-                            </div>
-                            <div class="p-6 flex flex-col">
-                                <h3 class="text-xl font-bold mb-3 text-gold">Pokédex App</h3>
-                                <p class="text-gray-300 mb-6 leading-relaxed">
-                                    Aplicacion web que consume la PokéAPI REST para buscar y visualizar informacion
-                                    detallada de Pokémon: estadisticas, tipos, habilidades e imagenes, con interfaz
-                                    moderna y responsive.
-                                </p>
-                                <div class="flex flex-wrap gap-2 mb-5">
-                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">HTML</span>
-                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">CSS</span>
-                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">JS</span>
-                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">REST API</span>
-                                </div>
-                                <a href="https://pokedex-three-tau-96.vercel.app/"
-                                   target="_blank" rel="noopener"
-                                   class="inline-flex items-center gap-2 text-sm font-bold text-black gold-gradient px-5 py-2.5 rounded-lg hover:opacity-90 transition-all duration-300 self-start">
-                                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
-                                    Ver Sitio Web
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ================================================
-                         SLIDE 4 — Doja E-commerce
-                    ================================================ -->
-                    <div class="shrink-0 grow-0 basis-[90%] sm:basis-[60%] lg:basis-[420px]">
-                        <div class="rounded-xl overflow-hidden group flex flex-col bg-black border border-gold/20 hover-lift">
-                            <div class="overflow-hidden bg-gray-900 aspect-video">
-                                <video src="/img/doja-video.mp4"
-                                       alt="Doja E-commerce — tienda en línea"
-                                       class="w-full h-full object-cover transition duration-300 group-hover:scale-105" autoplay muted loop>
-                                </video>
-                            </div>
-                            <div class="p-6 flex flex-col">
-                                <h3 class="text-xl font-bold mb-3 text-gold">Doja E-commerce</h3>
-                                <p class="text-gray-300 mb-6 leading-relaxed">
-                                    Tienda en linea con catalogo de productos, carrito de compras y diseño responsive.
-                                    Experiencia de compra fluida, rapida y visualmente atractiva para el mercado
-                                    costarricense.
-                                </p>
-                                <div class="flex flex-wrap gap-2 mb-5">
-                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">HTML</span>
-                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">CSS</span>
-                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">JS</span>
-                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">Next.js</span>
-                                </div>
-                                <a href="https://doja-ecommerce.vercel.app/"
-                                   target="_blank" rel="noopener"
-                                   class="inline-flex items-center gap-2 text-sm font-bold text-black gold-gradient px-5 py-2.5 rounded-lg hover:opacity-90 transition-all duration-300 self-start">
-                                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
-                                    Ver Sitio Web
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ================================================
-                         SLIDE 5 — Portafolio Diseñadora (Melissa Tinoco)
-                    ================================================ -->
-                    <!-- <div class="shrink-0 grow-0 basis-[90%] sm:basis-[60%] lg:basis-[420px]">
-                        <div class="rounded-xl overflow-hidden group flex flex-col bg-black border border-gold/20 hover-lift">
-                            <div class="overflow-hidden bg-gray-900 aspect-video">
-                                <video src="/img/melissa-portafolio.mp4"
-                                       alt="Portafolio diseñadora — Melissa Tinoco López"
-                                       class="w-full h-full object-cover transition duration-300 group-hover:scale-105" autoplay muted loop>
-                                </video>
-                            </div>
-                            <div class="p-6 flex flex-col">
-                                <h3 class="text-xl font-bold mb-3 text-gold">Portafolio Diseñadora</h3>
-                                <p class="text-gray-300 mb-6 leading-relaxed">
-                                    Sitio web de portafolio personal para diseñadora grafica Melissa Tinoco Lopez.
-                                    Presenta su identidad visual, proyectos de branding y diseño digital con una
-                                    estetica elegante y moderna.
-                                </p>
-                                <div class="flex flex-wrap gap-2 mb-5">
-                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">Diseño UI</span>
-                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">Portafolio</span>
-                                    <span class="bg-gray-900 text-xs text-gold px-3 py-1 rounded-full border border-gold/20">React</span>
-                                </div>
-                                <a href="https://portafolio-mel-iota.vercel.app/"
-                                   target="_blank" rel="noopener"
-                                   class="inline-flex items-center gap-2 text-sm font-bold text-black gold-gradient px-5 py-2.5 rounded-lg hover:opacity-90 transition-all duration-300 self-start">
-                                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
-                                    Ver Sitio Web
-                                </a>
-                            </div>
-                        </div>
-                    </div> -->
-
                 </div>
+
+                <!-- ================================================
+                     CONTROLES DEL CAROUSEL
+
+                     Agrupa dots, contador, barra de progreso y
+                     botones prev/next en una sola fila bajo el
+                     viewport (antes los botones vivian arriba,
+                     separados de los demas controles).
+                ================================================ -->
+                <div class="flex items-center justify-between mt-8 gap-4 flex-wrap">
+                    <!-- Dots: el JS los genera, uno por slide real (no por clon). -->
+                    <div id="projects-dots" class="flex items-center gap-2"></div>
+
+                    <div class="flex items-center gap-4 ml-auto">
+                        <span id="projects-counter" class="text-gold text-sm font-semibold tabular-nums" aria-live="polite">01 / 04</span>
+
+                        <!-- Barra de progreso: se llena hasta el siguiente avance
+                             automatico. Oculta por completo si el plugin de
+                             autoplay no cargo (ver JS: sin plugin, sin barra). -->
+                        <div id="projects-progress-track" class="w-16 sm:w-24 h-1 bg-white/10 rounded-full overflow-hidden">
+                            <div id="projects-progress-bar" class="h-full bg-gold origin-left" style="transform: scaleX(0)"></div>
+                        </div>
+
+                        <div class="flex gap-3">
+                            <button id="projects-prev" aria-label="Proyecto anterior"
+                                class="w-11 h-11 rounded-full border border-gold/50 text-gold flex items-center justify-center transition-all duration-300 hover:bg-gold hover:text-black disabled:opacity-30 disabled:pointer-events-none">
+                                <i class="fa-solid fa-arrow-left"></i>
+                            </button>
+                            <button id="projects-next" aria-label="Siguiente proyecto"
+                                class="w-11 h-11 rounded-full border border-gold/50 text-gold flex items-center justify-center transition-all duration-300 hover:bg-gold hover:text-black disabled:opacity-30 disabled:pointer-events-none">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
         </div>
@@ -1120,6 +1175,11 @@
 
     <!-- Embla Carousel (vanilla UMD): misma libreria que usa Gallery6, sin React ni bundler -->
     <script src="https://cdn.jsdelivr.net/npm/embla-carousel@8/embla-carousel.umd.js"></script>
+    <!-- Plugin oficial de autoplay, tambien UMD: expone window.EmblaCarouselAutoplay.
+         Si esta CDN falla, el carousel de #projects sigue funcionando manualmente
+         (drag, botones, dots, teclado), solo sin avance automatico ni barra de
+         progreso — ver el guard "hasAutoplay" en el IIFE del carousel. -->
+    <script src="https://cdn.jsdelivr.net/npm/embla-carousel-autoplay@8/embla-carousel-autoplay.umd.js"></script>
     <script>
 
         /* ================================================
@@ -1240,70 +1300,294 @@
 
 
         /* ================================================
-           CAROUSEL DE PROYECTOS (Embla Carousel, vanilla)
+           CAROUSEL DE PROYECTOS (Embla Carousel + plugin Autoplay)
 
-           Embla es la misma libreria que usa el componente
-           Gallery6 de referencia, pero en su version UMD:
-           corre sin React ni bundler, solo con una etiqueta
-           <script> por CDN. Expone la global EmblaCarousel.
+           Coverflow: align:'center' + loop:true, con un "tween"
+           de escala/opacidad en cada frame de scroll (evento
+           'scroll', que Embla dispara tanto en drag como en
+           scrollTo/autoplay). Es la receta oficial de Embla
+           ("Tween Scale"), adaptada aqui.
 
-           El carousel tiene tres piezas:
-           1. viewport (#projects-carousel): overflow-hidden
-              oculta lo que sale del area visible.
-           2. contenedor (div.flex): Embla lo arrastra
-              horizontalmente con CSS transforms.
-           3. slides: cada proyecto, con flex-basis fijo para
-              que sobresalga la siguiente tarjeta (peek).
+           Autoplay: plugin oficial embla-carousel-autoplay (UMD,
+           mismo patron de CDN que el core). stopOnInteraction:false
+           + stopOnMouseEnter:true = "pausa y luego reanuda" (el
+           default del plugin es "para permanentemente al primer
+           toque"). La pausa por pestaña oculta ya viene incluida
+           en el plugin.
 
-           Elegimos Embla en lugar de scroll-snap puro porque:
-           - dragFree en movil: el dedo mueve el carousel
-             libremente sin snapping forzado entre slides.
-           - canScrollPrev / canScrollNext: saber exactamente
-             si hay slides hacia cada lado, para deshabilitar
-             los botones en los extremos (igual que Gallery6).
-           - Eventos select y reInit: reaccionar al cambio
-             de slide y al redimensionado de la ventana.
+           Con loop:true, canScrollPrev()/canScrollNext() siempre
+           son true (no hay "extremo" en un carousel infinito) —
+           los botones prev/next nunca se deshabilitan, es el
+           comportamiento correcto, no un bug.
         ================================================ */
         (function () {
+            const region   = document.querySelector('#projects-carousel-region');
             const viewport = document.querySelector('#projects-carousel');
 
-            // Si no existe el nodo o Embla no cargo (fallo de CDN), salir sin error.
-            if (!viewport || !window.EmblaCarousel) return;
+            // Si no existen los nodos o Embla no cargo (fallo de CDN), salir sin error.
+            if (!region || !viewport || !window.EmblaCarousel) return;
 
-            const emblaApi = EmblaCarousel(viewport, {
-                align: 'start',          // las tarjetas se alinean al borde izquierdo
-                containScroll: 'trimSnaps', // evita que el scroll pase del ultimo slide
-                breakpoints: {
-                    // En movil (<=768px) el arrastre es libre: el dedo no
-                    // necesita superar un umbral para cambiar de slide.
-                    // En desktop se mantiene el snap para que cada click
-                    // avance exactamente una tarjeta.
-                    '(max-width: 768px)': { dragFree: true }
-                }
-            });
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const hasAutoplay = !!window.EmblaCarouselAutoplay;
+            const AUTOPLAY_DELAY = 6000;
 
+            const autoplayPlugin = (hasAutoplay && !prefersReducedMotion)
+                ? EmblaCarouselAutoplay({
+                    delay: AUTOPLAY_DELAY,
+                    stopOnInteraction: false,
+                    stopOnMouseEnter: true,
+                    stopOnFocusIn: true,
+                    rootNode: (emblaRoot) => emblaRoot.closest('#projects-carousel-region') || emblaRoot
+                })
+                : null;
+
+            const emblaApi = EmblaCarousel(
+                viewport,
+                { align: 'center', loop: true },
+                autoplayPlugin ? [autoplayPlugin] : []
+            );
+
+            /* ================================================
+               BOTONES PREV/NEXT
+            ================================================ */
             const btnPrev = document.querySelector('#projects-prev');
             const btnNext = document.querySelector('#projects-next');
 
-            /* Habilita o deshabilita cada boton segun si Embla puede
-               seguir avanzando en esa direccion.
-               El atributo HTML "disabled" activa las clases de Tailwind
-               disabled:opacity-30 y disabled:pointer-events-none que
-               ya estan declaradas en el HTML del boton. */
             const actualizarBotones = function () {
                 btnPrev.disabled = !emblaApi.canScrollPrev();
                 btnNext.disabled = !emblaApi.canScrollNext();
             };
 
-            btnPrev.addEventListener('click', function () { emblaApi.scrollPrev(); });
-            btnNext.addEventListener('click', function () { emblaApi.scrollNext(); });
+            const reiniciarAutoplay = function () {
+                if (autoplayPlugin) autoplayPlugin.reset();
+            };
 
-            // 'select' se dispara al cambiar el slide activo.
-            // 'reInit' se dispara cuando Embla recalcula (ej: resize de ventana).
-            // Ambos eventos actualizan el estado disabled de los botones.
+            btnPrev.addEventListener('click', function () { emblaApi.scrollPrev(); reiniciarAutoplay(); });
+            btnNext.addEventListener('click', function () { emblaApi.scrollNext(); reiniciarAutoplay(); });
+
             emblaApi.on('select', actualizarBotones);
             emblaApi.on('reInit', actualizarBotones);
-            actualizarBotones(); // estado inicial: deshabilita "prev" al arrancar
+            actualizarBotones();
+
+            /* ================================================
+               BADGE HONESTO ("Proyecto para cliente" / "conceptual")
+
+               Lee data-tipo del slide (puesto a mano en el HTML,
+               facil de corregir) y llena el span.proyecto-badge
+               que esta dentro de esa misma tarjeta. Se hace una
+               sola vez al iniciar, no cambia con el carousel.
+            ================================================ */
+            const ETIQUETAS_TIPO = {
+                cliente: 'Proyecto para cliente',
+                conceptual: 'Proyecto conceptual'
+            };
+
+            emblaApi.slideNodes().forEach((slideNode) => {
+                const tipo = slideNode.getAttribute('data-tipo');
+                const badge = slideNode.querySelector('.proyecto-badge');
+                if (badge && ETIQUETAS_TIPO[tipo]) {
+                    badge.textContent = ETIQUETAS_TIPO[tipo];
+                }
+            });
+
+            /* ================================================
+               DOTS + CONTADOR ("01 / 04")
+
+               scrollSnapList().length = cantidad real de slides
+               (con align:'center' y sin agrupar, cada slide es
+               su propio snap). Los dots se generan una vez; el
+               dot activo y el contador se actualizan en 'select'.
+            ================================================ */
+            const dotsContainer = document.querySelector('#projects-dots');
+            const counterEl     = document.querySelector('#projects-counter');
+            const totalSlides   = emblaApi.scrollSnapList().length;
+
+            const pad2 = (n) => String(n).padStart(2, '0');
+
+            emblaApi.scrollSnapList().forEach((_, index) => {
+                const dot = document.createElement('button');
+                dot.type = 'button';
+                dot.setAttribute('aria-label', 'Ir al proyecto ' + (index + 1));
+                dot.className = 'w-2.5 h-2.5 rounded-full bg-white/20 transition-colors duration-300';
+                dot.addEventListener('click', function () {
+                    emblaApi.scrollTo(index);
+                    reiniciarAutoplay();
+                });
+                dotsContainer.appendChild(dot);
+            });
+
+            const dots = Array.from(dotsContainer.children);
+
+            const actualizarDotsYContador = function () {
+                const selected = emblaApi.selectedScrollSnap();
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('bg-gold', index === selected);
+                    dot.classList.toggle('bg-white/20', index !== selected);
+                });
+                counterEl.textContent = pad2(selected + 1) + ' / ' + pad2(totalSlides);
+            };
+
+            emblaApi.on('select', actualizarDotsYContador);
+            emblaApi.on('reInit', actualizarDotsYContador);
+            actualizarDotsYContador();
+
+            /* ================================================
+               BARRA DE PROGRESO
+
+               timeUntilNext() (del plugin de autoplay) maneja el
+               tiempo real, evita el truco fragil de reiniciar una
+               animacion CSS con reflow. Si no hay plugin (CDN
+               fallo o prefers-reduced-motion), se oculta la pista
+               entera: no hay nada que la impulse.
+            ================================================ */
+            const progressTrack = document.querySelector('#projects-progress-track');
+            const progressBar   = document.querySelector('#projects-progress-bar');
+
+            if (!autoplayPlugin) {
+                progressTrack.style.display = 'none';
+            } else {
+                let rafId = null;
+
+                const tick = function () {
+                    const remaining = autoplayPlugin.timeUntilNext();
+                    if (remaining == null) { rafId = null; return; } // pausado: se queda como esta
+                    const fraction = Math.min(Math.max(1 - remaining / AUTOPLAY_DELAY, 0), 1);
+                    progressBar.style.transform = 'scaleX(' + fraction + ')';
+                    rafId = requestAnimationFrame(tick);
+                };
+
+                const iniciarBarra = function () {
+                    if (rafId) return;
+                    rafId = requestAnimationFrame(tick);
+                };
+
+                const detenerBarra = function () {
+                    if (rafId) cancelAnimationFrame(rafId);
+                    rafId = null;
+                };
+
+                emblaApi.on('autoplay:timerset', iniciarBarra);
+                emblaApi.on('autoplay:timerstopped', detenerBarra);
+                emblaApi.on('select', function () { progressBar.style.transform = 'scaleX(0)'; });
+            }
+
+            /* ================================================
+               TWEEN COVERFLOW (escala + opacidad)
+
+               Se aplica sobre .projects-slide-inner (el div de la
+               tarjeta), nunca sobre el nodo que Embla mide para su
+               layout. No lleva transition en CSS: el JS ya actualiza
+               en cada frame de scroll real, una transition CSS
+               encima solo generaria retraso.
+
+               Se omite por completo con prefers-reduced-motion: los
+               slides quedan a tamaño y opacidad normales (reforzado
+               ademas por CSS en el media query correspondiente).
+            ================================================ */
+            if (!prefersReducedMotion) {
+                const SCALE_MIN = 0.85, SCALE_MAX = 1;
+                const OPACITY_MIN = 0.45, OPACITY_MAX = 1;
+                const TWEEN_FACTOR = emblaApi.scrollSnapList().length;
+
+                let tweenNodes = [];
+                const setTweenNodes = function () {
+                    tweenNodes = emblaApi.slideNodes().map((slideNode) =>
+                        slideNode.querySelector('.projects-slide-inner')
+                    );
+                };
+
+                const numberWithinRange = (n, min, max) => Math.min(Math.max(n, min), max);
+
+                const tweenCoverflow = function () {
+                    const engine = emblaApi.internalEngine();
+                    const scrollProgress = emblaApi.scrollProgress();
+                    const slidesInView = emblaApi.slidesInView();
+
+                    emblaApi.scrollSnapList().forEach((scrollSnap, snapIndex) => {
+                        let diffToTarget = scrollSnap - scrollProgress;
+                        const slidesInSnap = engine.slideRegistry[snapIndex];
+
+                        slidesInSnap.forEach((slideIndex) => {
+                            if (!slidesInView.includes(slideIndex)) return;
+
+                            if (engine.options.loop) {
+                                engine.slideLooper.loopPoints.forEach((loopItem) => {
+                                    const target = loopItem.target();
+                                    if (slideIndex === loopItem.index && target !== 0) {
+                                        const sign = Math.sign(target);
+                                        diffToTarget = sign === -1
+                                            ? scrollSnap - (1 + scrollProgress)
+                                            : scrollSnap + (1 - scrollProgress);
+                                    }
+                                });
+                            }
+
+                            const t = numberWithinRange(Math.abs(diffToTarget) * TWEEN_FACTOR, 0, 1);
+                            const scale = SCALE_MAX - t * (SCALE_MAX - SCALE_MIN);
+                            const opacity = OPACITY_MAX - t * (OPACITY_MAX - OPACITY_MIN);
+                            const inner = tweenNodes[slideIndex];
+                            if (inner) {
+                                inner.style.transform = 'scale(' + scale + ')';
+                                inner.style.opacity = opacity;
+                            }
+                        });
+                    });
+                };
+
+                setTweenNodes();
+                emblaApi.on('scroll', tweenCoverflow);
+                emblaApi.on('reInit', function () { setTweenNodes(); tweenCoverflow(); });
+                emblaApi.on('slideFocus', tweenCoverflow);
+                tweenCoverflow();
+            }
+
+            /* ================================================
+               VIDEO SOLO EN EL SLIDE ACTIVO
+
+               Pausa todos los videos y reproduce unicamente el
+               del slide seleccionado. .catch() silencioso por si
+               el navegador bloquea el autoplay programatico.
+            ================================================ */
+            const actualizarVideos = function () {
+                const selectedIndex = emblaApi.selectedScrollSnap();
+                emblaApi.slideNodes().forEach((slideNode, index) => {
+                    const video = slideNode.querySelector('video');
+                    if (!video) return;
+                    if (index === selectedIndex) {
+                        const playPromise = video.play();
+                        if (playPromise && typeof playPromise.catch === 'function') {
+                            playPromise.catch(() => {});
+                        }
+                    } else {
+                        video.pause();
+                    }
+                });
+            };
+
+            emblaApi.on('select', actualizarVideos);
+            emblaApi.on('init', actualizarVideos);
+            actualizarVideos();
+
+            /* ================================================
+               TECLADO: flechas izquierda/derecha
+
+               El listener vive en la region (no en document), asi
+               que solo actua cuando el foco esta dentro del
+               carousel (la region misma, un dot, un boton o un
+               link de tarjeta) y no secuestra las flechas en el
+               resto de la pagina.
+            ================================================ */
+            region.addEventListener('keydown', function (e) {
+                if (e.key === 'ArrowLeft') {
+                    emblaApi.scrollPrev();
+                    reiniciarAutoplay();
+                    e.preventDefault();
+                } else if (e.key === 'ArrowRight') {
+                    emblaApi.scrollNext();
+                    reiniciarAutoplay();
+                    e.preventDefault();
+                }
+            });
         }());
 
 
