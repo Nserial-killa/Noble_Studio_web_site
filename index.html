@@ -212,49 +212,6 @@
         }
 
         /* ================================================
-           CURSOR PARPADEANTE DEL EFECTO TYPING
-
-           @keyframes blink alterna entre opaco y
-           transparente. step-end hace el parpadeo
-           abrupto (no gradual), como un cursor real.
-
-           Es un span inline que aparece justo despues
-           del texto que se esta "escribiendo".
-        ================================================ */
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50%       { opacity: 0; }
-        }
-
-        .typing-cursor {
-            display: inline-block;
-            width: 3px;
-            height: 1em;
-            background-color: #FFD700;
-            margin-left: 3px;
-            vertical-align: middle;
-            animation: blink 0.7s step-end infinite;
-        }
-
-
-        /* ================================================
-           NUMEROS DE ESTADISTICAS (CONTADORES)
-           background-clip: text + transparent fill
-           es el truco para aplicar un gradiente al
-           texto. El gradiente se recorta con la forma
-           de las letras.
-        ================================================ */
-        .stat-number {
-            font-size: 3.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1;
-        }
-
-        /* ================================================
            BOTON FLOTANTE DE WHATSAPP
 
            position: fixed lo ancla a la pantalla sin
@@ -322,11 +279,48 @@
             opacity: 1;
         }
 
-    
+        /* ================================================
+           FLOTACION DEL LOGO (contenedor .ave-hero)
 
-    
+           Solo translateY: el conjunto sube y baja 14px.
+           Ya no hay rotacion del cuerpo completo porque
+           el ala tiene su propia animacion de giro.
 
-        
+           Duracion 2.4s sincronizada con el aleteo (1.2s):
+           2.4 / 1.2 = 2, lo que significa que el ave hace
+           exactamente DOS aleteos completos por cada ciclo
+           de subida y bajada, dando una sensacion natural.
+        ================================================ */
+        @keyframes flotar {
+            0%,  100% { transform: translateY(0px);   }
+            50%        { transform: translateY(-14px); }
+        }
+
+        /* ================================================
+           SOMBRA DE SUELO — contrafase con la flotacion
+
+           Actualizada a 2.4s para sincronizar con flotar.
+           Keyframes simplificados: solo necesitamos los
+           extremos (suelo = sombra grande, aire = pequeña).
+
+           Contrafase significa que cuando el ave esta en
+           su punto mas alto (50% del keyframe), la sombra
+           esta en su tamaño minimo, igual que en la vida real.
+        ================================================ */
+        @keyframes sombra-vuelo {
+            0%,  100% { transform: scaleX(1);   opacity: 0.55; }
+            50%        { transform: scaleX(0.6); opacity: 0.22; }
+        }
+
+        .logo-sombra {
+            height: 14px;
+            /* gradiente radial: dorado semitransparente en el centro,
+               transparente en los bordes, imita una sombra difusa real */
+            background: radial-gradient(ellipse, rgba(166, 124, 0, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            margin: 4px auto 0;
+            animation: sombra-vuelo 2.4s ease-in-out infinite;
+        }
 
         /* ================================================
            LOGO EN CAPAS — contenedor del ave en el hero
@@ -345,11 +339,11 @@
            y grid-area: 1/1 pone ambas imagenes en la misma
            celda, superpuestas perfectamente.
         ================================================ */
-        /*.ave-hero {
+        .ave-hero {
             display: grid;
             animation: flotar 2.4s ease-in-out infinite;
             will-change: transform;
-        }*/
+        }
 
         /* grid-area: 1/1 equivale a grid-row:1; grid-column:1.
            Pone las dos imagenes en la misma celda del grid,
@@ -358,7 +352,7 @@
            las proporciones naturales de la imagen (452/552). */
         .ave-hero img {
             grid-area: 1 / 1;
-            height: 28rem;   /* equivalente a h-66 en Tailwind */
+            height: 16.5rem;   /* equivalente a h-66 en Tailwind */
             width: auto;
         }
 
@@ -493,7 +487,7 @@
          overflow-hidden evita que el contenido se vea
          fuera de la seccion cuando el parallax lo mueve.
     ================================================ -->
-    <section id="inicio" class="min-h-screen gradient-bg flex items-center justify-center pt-10 pb-28 overflow-hidden">
+    <section id="inicio" class="min-h-screen bg-white flex items-center justify-center pt-10 pb-28 overflow-hidden">
 
         <div id="hero-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-[2px]">
             <div class="text-center">
@@ -509,23 +503,18 @@
                          de .ave-hero img (height: 16.5rem, width: auto). -->
                     <div class="ave-hero">
 
-
-                            <img src="img/noble-studio-logo.png"
-                                 alt=""
-                                 aria-hidden="true">
-
                         <!-- Capa 1: cuerpo, cabeza y cola (estaticos) -->
-                        <!-- <img src="/img/logo-cuerpo.png"
+                        <img src="/img/logo-cuerpo.png"
                              alt=""
-                             aria-hidden="true"> -->
+                             aria-hidden="true">
 
                         <!-- Capa 2: alas — se superponen al cuerpo y rotan
                              desde el hombro con la clase ala-aleteo.
                              Este img lleva el alt descriptivo porque es la
                              capa "visible" que el usuario identifica. -->
-                        <!-- <img src="/img/logo-ala.png"
+                        <img src="/img/logo-ala.png"
                              class="ala-aleteo"
-                             alt="Noble Studio Logo"> -->
+                             alt="Noble Studio Logo">
                     </div>
 
                     <!-- Sombra eliptica de suelo: se encoge cuando el ave
@@ -533,60 +522,32 @@
                     <div class="logo-sombra w-32"></div>
                 </div>
 
-                <!-- Titulo principal -->
-                <h1 class="text-5xl md:text-7xl font-bold mt-[2px]">
-                    <span class="text-white">Noble</span>
-                    <span class="text-gold"> Studio</span>
+                <!-- Marca -->
+                <h1 class="font-display text-5xl md:text-7xl font-bold mt-[2px]">
+                    <span class="text-ink">Noble</span>
+                    <span class="text-gold-deep"> Studio</span>
                 </h1>
 
-                
+                <!-- Propuesta de valor: una frase clara de que hacemos
+                     y para quien, pensada para que un dueño de negocio
+                     entienda el beneficio en 3 segundos. -->
+                <h2 class="font-display text-3xl md:text-5xl font-bold mt-6 max-w-4xl mx-auto text-ink">
+                    Diseño y desarrollo web que impulsan tu negocio
+                </h2>
+                <p class="text-lg md:text-xl text-warmgray max-w-2xl mx-auto mt-5">
+                    Estudio digital costarricense: sitios web, apps y diseño de marca hechos a tu medida.
+                </p>
+
                 <!-- Botones de accion (CTA) -->
-                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-16 mt-16">
-                    <a href="#servicios" class="gold-gradient text-black px-8 py-4 rounded-lg font-semibold hover:shadow-lg hover:shadow-gold/30 transition-all duration-300">
-                        Ver Servicios
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mt-10">
+                    <a href="https://wa.me/50689755791" target="_blank" rel="noopener"
+                       class="gold-gradient text-ink px-8 py-4 rounded-lg font-semibold hover:shadow-lg hover:shadow-gold/30 transition-all duration-300">
+                        <i class="fab fa-whatsapp mr-2"></i>Cotiza tu proyecto
                     </a>
-                    <a href="#contacto" class="border-2 border-gold text-gold px-8 py-4 rounded-lg font-semibold hover:bg-gold hover:text-black transition-all duration-300">
-                        Contactar
+                    <a href="#projects" class="border-2 border-gold-deep text-gold-ink px-8 py-4 rounded-lg font-semibold hover:bg-gold-deep hover:text-white transition-all duration-300">
+                        Ver proyectos
                     </a>
                 </div>
-
-
-                <!-- Subtitulo con efecto typing.
-                     #typing-text: el JS escribe el texto aqui,
-                     caracter por caracter.
-                     .typing-cursor: el palito dorado parpadeante. -->
-
-                    <!-- <h2 class="text-4xl md:text-5xl font-bold mb-6">
-                    Trabajemos <span class="text-gold">Juntos</span>
-                    </h2> -->
-
-                <h2 class="text-4xl md:text-5xl font-bold mb-6">
-                    Trabajemos<span id="typing-text"></span>
-                    </span> <span class="text-gold">Juntos</span>
-                    </h2>
-
-                    <p class="text-xl text-gray-300 max-w-3xl mx-auto">
-                    ¿Tienes un proyecto en mente? Nos encantaría escuchar tus ideas y ayudarte a convertirlas en realidad digital.
-                    </p>
-                    
-
-
-                <!-- CONTADORES ANIMADOS
-                     data-target: el numero hasta donde cuenta el JS.
-                     data-suffix: el texto que se agrega al final
-                     (ej: "+" o " año").
-                     El JS los lee con getAttribute() y anima
-                     el conteo desde 0. -->
-                <!-- <div class="grid grid-cols-2 gap-8 max-w-xs mx-auto fade-in">
-                    <div class="text-center">
-                        <div class="stat-number" data-target="5" data-suffix="+">0</div>
-                        <p class="text-gray-400 mt-2 text-xs uppercase tracking-widest">Proyectos</p>
-                    </div>
-                    <div class="text-center">
-                        <div class="stat-number" data-target="1" data-suffix=" año">0</div>
-                        <p class="text-gray-400 mt-2 text-xs uppercase tracking-widest">Experiencia</p>
-                    </div>
-                </div> -->
 
             </div>
         </div>
@@ -1136,113 +1097,6 @@
     <!-- Embla Carousel (vanilla UMD): misma libreria que usa Gallery6, sin React ni bundler -->
     <script src="https://cdn.jsdelivr.net/npm/embla-carousel@8/embla-carousel.umd.js"></script>
     <script>
-
-        /* ================================================
-           EFECTO TYPING EN EL HERO
-
-           Escribe el texto caracter a caracter en el
-           span#typing-text, luego lo borra y repite.
-
-           - charIndex: posicion actual dentro del texto
-           - isDeleting: true = modo borrado, false = modo escritura
-           - typingSpeed: milisegundos entre cada letra al escribir
-           - deletingSpeed: ms entre cada borrado (mas rapido)
-           - pauseTime: ms de pausa cuando termina de escribir
-        ================================================ */
-        const typingTarget = document.getElementById('typing-text');
-        const textToType   = '';
-        let charIndex   = 0;
-        let isDeleting  = false;
-        const typingSpeed   = 45;
-        const deletingSpeed = 20;
-        const pauseTime     = 3000;
-
-        function typeEffect() {
-            if (!isDeleting) {
-                // Modo escritura: substring(0, n) toma los primeros n caracteres
-                typingTarget.textContent = textToType.substring(0, charIndex + 1);
-                charIndex++;
-
-                if (charIndex === textToType.length) {
-                    // Llego al final: pausa antes de empezar a borrar
-                    setTimeout(() => { isDeleting = true; typeEffect(); }, pauseTime);
-                    return;
-                }
-            } else {
-                // Modo borrado: recorta un caracter por el final
-                typingTarget.textContent = textToType.substring(0, charIndex - 1);
-                charIndex--;
-
-                if (charIndex === 0) {
-                    isDeleting = false; // termino de borrar, vuelve a escribir
-                }
-            }
-
-            // setTimeout programa la proxima "letra" segun el modo actual
-            setTimeout(typeEffect, isDeleting ? deletingSpeed : typingSpeed);
-        }
-
-        typeEffect(); // arranca el loop al cargar la pagina
-
-
-        /* ================================================
-           CONTADORES ANIMADOS (ESTADISTICAS)
-
-           Lee el data-target de cada .stat-number y
-           anima el numero desde 0 hasta ese valor.
-
-           requestAnimationFrame(fn) llama a fn en el
-           proximo frame del browser (60fps). Es la forma
-           correcta de animar: sincroniza con la pantalla
-           y pausa automaticamente cuando la pestaña no
-           esta visible, ahorrando recursos.
-
-           easeOut: la formula (1 - (1-t)^3) hace que el
-           contador empiece rapido y desacelere al final,
-           dando una sensacion mas natural.
-
-           IntersectionObserver activa el contador solo
-           cuando el elemento es visible en pantalla,
-           para que el usuario vea el efecto completo.
-        ================================================ */
-        // function animateCounter(el) {
-        //     const target   = parseInt(el.getAttribute('data-target'));
-        //     const suffix   = el.getAttribute('data-suffix') || '';
-        //     const duration = 1500; // duracion total en ms
-        //     const startTime = performance.now(); // marca de tiempo de inicio
-
-        //     function update(currentTime) {
-        //         // elapsed va de 0.0 a 1.0 durante la animacion
-        //         const elapsed = Math.min((currentTime - startTime) / duration, 1);
-
-        //         // easeOut: empieza rapido, desacelera al final
-        //         const eased   = 1 - Math.pow(1 - elapsed, 3);
-        //         const current = Math.floor(eased * target);
-
-        //         el.textContent = current + suffix;
-
-        //         if (elapsed < 1) {
-        //             requestAnimationFrame(update); // sigue hasta llegar a 1.0
-        //         } else {
-        //             el.textContent = target + suffix; // garantiza el valor exacto final
-        //         }
-        //     }
-
-        //     requestAnimationFrame(update);
-        // }
-
-        // threshold: 0.5 = activa cuando el 50% del elemento es visible
-        const counterObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    animateCounter(entry.target);
-                    counterObserver.unobserve(entry.target); // solo se anima una vez
-                }
-            });
-        }, { threshold: 0.5 });
-
-        document.querySelectorAll('.stat-number').forEach(el => counterObserver.observe(el));
-
 
         /* ================================================
            NAVBAR: EFECTO AL HACER SCROLL
