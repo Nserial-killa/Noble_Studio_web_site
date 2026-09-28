@@ -68,11 +68,45 @@
         }
 
         /* ================================================
+           DIFUMINADO HERO -> SERVICIOS
+
+           #inicio tiene mas especificidad que .gradient-bg
+           (selector de id vs. clase), asi que este fondo
+           reemplaza al negro solido SOLO en el hero, sin
+           afectar a #contacto (que tambien usa .gradient-bg
+           y debe seguir siendo negro solido).
+
+           0%-40%: negro solido (mismo look que antes).
+           40%-100%: rampa suave hacia blanco, para que el
+           borde inferior del hero (min-h-screen) conecte
+           sin corte con el fondo blanco de #servicios.
+           Los pasos intermedios (1a1a1a, 4d4d4d, etc.) evitan
+           que el ojo perciba un "escalon" a mitad del degradado.
+        ================================================ */
+        /*#inicio {
+            background: linear-gradient(
+                to bottom,
+                #000000 0%,
+                #000000 40%,
+                #1a1a1a 55%,
+                #4d4d4d 68%,
+                #808080 78%,
+                #b3b3b3 86%,
+                #e0e0e0 93%,
+                #ffffff 100%
+            );
+        }*/
+
+        /* ================================================
            GRADIENTE DORADO
            Usado en botones, iconos y avatares del equipo.
         ================================================ */
         .gold-gradient {
-            background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%);
+            background: linear-gradient(135deg, #8b9123 0%, #B8860B 100%);
+        }
+
+        #servicios {
+            background: #fefefe;
         }
 
         /* ================================================
@@ -257,48 +291,11 @@
             opacity: 1;
         }
 
-        /* ================================================
-           FLOTACION DEL LOGO (contenedor .ave-hero)
+    
 
-           Solo translateY: el conjunto sube y baja 14px.
-           Ya no hay rotacion del cuerpo completo porque
-           el ala tiene su propia animacion de giro.
+    
 
-           Duracion 2.4s sincronizada con el aleteo (1.2s):
-           2.4 / 1.2 = 2, lo que significa que el ave hace
-           exactamente DOS aleteos completos por cada ciclo
-           de subida y bajada, dando una sensacion natural.
-        ================================================ */
-        @keyframes flotar {
-            0%,  100% { transform: translateY(0px);   }
-            50%        { transform: translateY(-14px); }
-        }
-
-        /* ================================================
-           SOMBRA DE SUELO — contrafase con la flotacion
-
-           Actualizada a 2.4s para sincronizar con flotar.
-           Keyframes simplificados: solo necesitamos los
-           extremos (suelo = sombra grande, aire = pequeña).
-
-           Contrafase significa que cuando el ave esta en
-           su punto mas alto (50% del keyframe), la sombra
-           esta en su tamaño minimo, igual que en la vida real.
-        ================================================ */
-        @keyframes sombra-vuelo {
-            0%,  100% { transform: scaleX(1);   opacity: 0.55; }
-            50%        { transform: scaleX(0.6); opacity: 0.22; }
-        }
-
-        .logo-sombra {
-            height: 14px;
-            /* gradiente radial: dorado semitransparente en el centro,
-               transparente en los bordes, imita una sombra difusa real */
-            background: radial-gradient(ellipse, rgba(255, 215, 0, 0.3) 0%, transparent 70%);
-            border-radius: 50%;
-            margin: 4px auto 0;
-            animation: sombra-vuelo 2.4s ease-in-out infinite;
-        }
+        
 
         /* ================================================
            LOGO EN CAPAS — contenedor del ave en el hero
@@ -317,11 +314,11 @@
            y grid-area: 1/1 pone ambas imagenes en la misma
            celda, superpuestas perfectamente.
         ================================================ */
-        .ave-hero {
+        /*.ave-hero {
             display: grid;
             animation: flotar 2.4s ease-in-out infinite;
             will-change: transform;
-        }
+        }*/
 
         /* grid-area: 1/1 equivale a grid-row:1; grid-column:1.
            Pone las dos imagenes en la misma celda del grid,
@@ -330,7 +327,7 @@
            las proporciones naturales de la imagen (452/552). */
         .ave-hero img {
             grid-area: 1 / 1;
-            height: 16.5rem;   /* equivalente a h-66 en Tailwind */
+            height: 28rem;   /* equivalente a h-66 en Tailwind */
             width: auto;
         }
 
@@ -483,9 +480,9 @@
                     <div class="ave-hero">
 
 
-                        <video autoplay muted loop playsinline class="mt-24">
-                            <source src="/img/video-ave-logo.mp4" type="video/mp4" />
-                        </video>
+                            <img src="img/noble-studio-logo.png"
+                                 alt=""
+                                 aria-hidden="true">
 
                         <!-- Capa 1: cuerpo, cabeza y cola (estaticos) -->
                         <!-- <img src="/img/logo-cuerpo.png"
@@ -566,14 +563,14 @@
     </section>
 
     <!-- Services Section -->
-    <section id="servicios" class="py-20 bg-black">
+    <section id="servicios" class="py-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 fade-in">
                 <h2 class="text-4xl md:text-5xl font-bold mb-6">
-                    <span class="text-white">Nuestros</span>
+                    <span class="text-black">Nuestros</span>
                      <span class="text-gold">Servicios</span>
                 </h2>
-                <p class="text-xl text-gray-100 max-w-3xl mx-auto">
+                <p class="text-xl text-gray-900 max-w-3xl mx-auto">
                     Ofrecemos soluciones innovadoras de diseño y desarrollo digital para impulsar tu negocio al siguiente nivel.
                 </p>
             </div>
