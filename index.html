@@ -197,17 +197,18 @@
 
         #whatsapp-float {
             position: fixed;
-            bottom: 28px;
-            right: 28px;
+            bottom: 20px;
+            right: 20px;
             z-index: 9999;
-            width: 60px;
-            height: 60px;
-            background-color: #25D366; /* verde oficial de WhatsApp */
+            width: 56px;
+            height: 56px;
+            background-color: #FFFFFF;
+            border: 2px solid #A67C00;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.45);
+            box-shadow: 0 4px 20px rgba(26, 26, 26, 0.15);
             animation: pulse 2.5s ease-in-out infinite;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
@@ -216,12 +217,12 @@
         #whatsapp-float:hover {
             animation-play-state: paused;
             transform: scale(1.12);
-            box-shadow: 0 6px 28px rgba(37, 211, 102, 0.6);
+            box-shadow: 0 6px 28px rgba(26, 26, 26, 0.22);
         }
 
         #whatsapp-float i {
-            font-size: 1.9rem;
-            color: #fff;
+            font-size: 1.7rem;
+            color: #A67C00;
         }
 
         /* Tooltip "Escríbenos" que aparece al pasar el mouse */
@@ -229,8 +230,9 @@
             content: 'Escríbenos';
             position: absolute;
             right: 70px;
-            background: #25D366;
-            color: #fff;
+            background: #FFFFFF;
+            border: 1px solid rgba(166, 124, 0, 0.3);
+            color: #1A1A1A;
             font-size: 0.8rem;
             font-weight: 600;
             padding: 5px 12px;
@@ -238,6 +240,7 @@
             white-space: nowrap;
             opacity: 0;
             pointer-events: none;
+            box-shadow: 0 4px 14px rgba(26, 26, 26, 0.1);
             transition: opacity 0.2s ease;
         }
 
@@ -415,12 +418,12 @@
          target="_blank" abre WhatsApp en pestaña nueva.
          El numero va sin espacios: 506 (Costa Rica) + numero.
     ================================================ -->
-    <!-- <a id="whatsapp-float"
+    <a id="whatsapp-float"
        href="https://wa.me/50689755791"
-       target="_blank"
+       target="_blank" rel="noopener"
        aria-label="Contactar por WhatsApp">
         <i class="fab fa-whatsapp"></i>
-    </a> -->
+    </a>
 
     <!-- Navigation -->
     <nav class="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-gold/30">
@@ -1083,69 +1086,73 @@
     </section> -->
 
     <!-- Contact Section -->
-    <section id="contacto" class="py-20 gradient-bg">
+    <section id="contacto" class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 fade-in">
-                <h2 class="text-4xl md:text-5xl font-bold mb-6">
-                    Contáctanos<span class="text-gold"></span>
+                <h2 class="font-display text-4xl md:text-5xl font-bold mb-6 text-ink">
+                    Contáctanos
                 </h2>
-                
             </div>
-            
+
             <div class="grid lg:grid-cols-2 gap-12">
                 <div class="fade-in">
-                    <h3 class="text-2xl font-bold mb-6 text-gold">Información de Contacto</h3>
-                    <div class="space-y-6">
+                    <h3 class="font-display text-2xl font-bold mb-6 text-gold-deep">Información de Contacto</h3>
+                    <div class="space-y-4">
+                        <!-- WhatsApp como canal principal: bloque destacado,
+                             mas grande que Email/Ubicacion, primero en la lista.
+                             wa.me es la URL oficial de WhatsApp para abrir una
+                             conversacion directa sin agregar el contacto. El
+                             numero va sin espacios ni guiones, con codigo de
+                             pais (506 = Costa Rica). -->
+                        <a href="https://wa.me/50689755791" target="_blank" rel="noopener"
+                           class="flex items-center gap-4 p-4 rounded-xl border-2 border-gold-deep/30 bg-gold-light/40 hover:bg-gold-light transition-colors">
+                            <div class="w-14 h-14 rounded-full bg-[#25D366] flex items-center justify-center flex-shrink-0">
+                                <i class="fab fa-whatsapp text-white text-3xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-ink font-bold text-lg">WhatsApp</p>
+                                <p class="text-warmgray">+506 8975-5791 — respuesta rapida</p>
+                            </div>
+                        </a>
+
                         <div class="flex items-center space-x-4">
                             <div class="w-12 h-12 gold-gradient rounded-lg flex items-center justify-center">
-                                <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                 </svg>
                             </div>
                             <div>
-                                <p class="text-gold font-semibold">Email</p>
-                                <p class="text-gray-300">noble-studiocr@proton.me</p>
+                                <p class="text-gold-ink font-semibold">Email</p>
+                                <p class="text-warmgray">noble-studiocr@proton.me</p>
                             </div>
                         </div>
-                        
-                        <!-- WhatsApp: wa.me es la URL oficial de WhatsApp para
-                             abrir una conversacion directa sin necesidad de
-                             agregar el contacto. El numero va sin espacios ni
-                             guiones, con codigo de pais (506 = Costa Rica). -->
-                        <div class="flex items-center space-x-4">
-                            
-                        </div>
-                        
+
                         <div class="flex items-center space-x-4">
                             <div class="w-12 h-12 gold-gradient rounded-lg flex items-center justify-center">
-                                <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 </svg>
                             </div>
                             <div>
-                                <p class="text-gold font-semibold">Ubicación</p>
-                                <p class="text-gray-300">Trabajamos remotamente</p>
+                                <p class="text-gold-ink font-semibold">Ubicación</p>
+                                <p class="text-warmgray">Trabajamos remotamente</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-
-            
-
-
                 <div class="mt-8 fade-in">
-                    <h3 class="text-2xl font-bold mb-6 text-gold">¿Listo para comenzar?</h3>
+                    <h3 class="font-display text-2xl font-bold mb-6 text-gold-deep">¿Listo para comenzar?</h3>
 	                <a href="#contacto" id="btn-contactame"
-		                class="btn-primary px-6 py-2 rounded-lg text-black font-medium inline-flex items-center">
+		                class="px-6 py-2 rounded-lg font-medium inline-flex items-center">
 			                <i class="fas fa-paper-plane mr-2"></i> Contáctanos
                     </a>
 
                         <div class="flex space-x-6 mb-6 mt-10">
                             <a href="https://www.instagram.com/__noble___studio___?igsh=MTZrcjJmdnU2ZmR5Mg=="
-                            class="text-gray-400 hover:text-gold transition-colors"
-                            target="_blank">
+                            class="text-warmgray hover:text-gold-ink transition-colors"
+                            target="_blank" rel="noopener" aria-label="Instagram de Noble Studio">
                                 <img src="/img/instagram-svgrepo-com.svg"
                                     class="h-8"
                                     alt="Instagram"
@@ -1153,33 +1160,32 @@
                             </a>
 
                             <a href="https://wa.me/50689755791"
-                            class="text-gray-400 hover:text-gold transition-colors"
-                            target="_blank">
-                                <i class="fab fa-whatsapp text-white text-3xl mb-2"></i>
+                            class="text-[#25D366] hover:text-gold-ink transition-colors"
+                            target="_blank" rel="noopener" aria-label="WhatsApp de Noble Studio">
+                                <i class="fab fa-whatsapp text-3xl mb-2"></i>
                             </a>
                         </div>
 
                 </div>
-                </div>
-
-                 
-                
-                
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-black border-t border-gold/20 py-12">
+    <!-- Banda oscura intencional: unico lugar del sitio (junto al
+         carousel de proyectos) que rompe con el blanco/marfil general,
+         para dar un cierre con contraste. #111 en vez de negro puro,
+         un poco mas suave. -->
+    <footer class="bg-[#111111] border-t border-gold/20 py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
                 <div class="flex items-center justify-center space-x-3 mb-6">
                     <img src="/img/noble_studio_logo.png" class="h-24" alt="">
-                    <span class="text-2xl font-bold text-gold">Noble Studio</span>
+                    <span class="font-display text-2xl font-bold text-gold">Noble Studio</span>
                 </div>
                 <p class="text-gray-400 mb-6">Tu visión, Nuestra innovación. </p>
-               
-                <p class="text-gray-500 text-sm">© 2025 Noble Studio. Todos los derechos reservados.</p>
+
+                <p class="text-gray-500 text-sm">© 2026 Noble Studio. Todos los derechos reservados.</p>
             </div>
         </div>
     </footer>
