@@ -97,45 +97,11 @@
         }
 
         /* ================================================
-           DIFUMINADO HERO -> SERVICIOS
-
-           #inicio tiene mas especificidad que .gradient-bg
-           (selector de id vs. clase), asi que este fondo
-           reemplaza al negro solido SOLO en el hero, sin
-           afectar a #contacto (que tambien usa .gradient-bg
-           y debe seguir siendo negro solido).
-
-           0%-40%: negro solido (mismo look que antes).
-           40%-100%: rampa suave hacia blanco, para que el
-           borde inferior del hero (min-h-screen) conecte
-           sin corte con el fondo blanco de #servicios.
-           Los pasos intermedios (1a1a1a, 4d4d4d, etc.) evitan
-           que el ojo perciba un "escalon" a mitad del degradado.
-        ================================================ */
-        /*#inicio {
-            background: linear-gradient(
-                to bottom,
-                #000000 0%,
-                #000000 40%,
-                #1a1a1a 55%,
-                #4d4d4d 68%,
-                #808080 78%,
-                #b3b3b3 86%,
-                #e0e0e0 93%,
-                #ffffff 100%
-            );
-        }*/
-
-        /* ================================================
            GRADIENTE DORADO
            Usado en botones, iconos y avatares del equipo.
         ================================================ */
         .gold-gradient {
             background: linear-gradient(135deg, #D4AF37 0%, #A67C00 100%);
-        }
-
-        #servicios {
-            background: #fefefe;
         }
 
         /* ================================================
@@ -554,67 +520,76 @@
     </section>
 
     <!-- Services Section -->
-    <section id="servicios" class="py-20">
+    <section id="servicios" class="py-20 bg-ivory">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 fade-in">
-                <h2 class="text-4xl md:text-5xl font-bold mb-6">
-                    <span class="text-black">Nuestros</span>
-                     <span class="text-gold">Servicios</span>
+                <h2 class="font-display text-4xl md:text-5xl font-bold mb-6">
+                    <span class="text-ink">Nuestros</span>
+                     <span class="text-gold-deep">Servicios</span>
                 </h2>
-                <p class="text-xl text-gray-900 max-w-3xl mx-auto">
+                <p class="text-xl text-warmgray max-w-3xl mx-auto">
                     Ofrecemos soluciones innovadoras de diseño y desarrollo digital para impulsar tu negocio al siguiente nivel.
                 </p>
             </div>
-            
+
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="bg-black p-8 rounded-xl border border-gold/20 hover-lift fade-in">
+                <div class="bg-white p-8 rounded-xl border border-gold/30 shadow-md hover-lift fade-in flex flex-col">
                     <div class="w-16 h-16 gold-gradient rounded-lg flex items-center justify-center mb-6">
-                        <svg class="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a4 4 0 004-4V5z"></path>
                         </svg>
                     </div>
-                    <h3 class="text-2xl font-bold mb-4 text-gold">Diseño Digital</h3>
-                    <p class="text-gray-300 mb-6">Creamos identidades visuales impactantes, logos, branding y diseños para redes sociales que destacan tu marca.</p>
-                    <ul class="text-sm text-gray-400 space-y-2">
+                    <h3 class="font-display text-2xl font-bold mb-4 text-gold-deep">Diseño Digital</h3>
+                    <p class="text-warmgray mb-6">Creamos identidades visuales impactantes, logos, branding y diseños para redes sociales que destacan tu marca.</p>
+                    <ul class="text-sm text-warmgray space-y-2 mb-6">
                         <li>• Identidad corporativa</li>
                         <li>• Diseño de logos</li>
                         <li>• Material publicitario</li>
                         <li>• Diseño para redes sociales</li>
                     </ul>
+                    <a href="#contacto" class="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-gold-ink hover:text-gold-deep transition-colors">
+                        Solicitar este servicio <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </a>
                 </div>
 
-                <div class="bg-black p-8 rounded-xl border border-gold/20 hover-lift fade-in">
+                <div class="bg-white p-8 rounded-xl border border-gold/30 shadow-md hover-lift fade-in flex flex-col">
                     <div class="w-16 h-16 gold-gradient rounded-lg flex items-center justify-center mb-6">
-                        <svg class="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v2a2 2 0 002 2h2a2 2 0 002-2v-2M5 17h14M5 7h14M7 7v10M17 7v10"></path>
                         </svg>
                     </div>
-                    <h3 class="text-2xl font-bold mb-4 text-gold">Recuperación de Computadoras</h3>
-                    <p class="text-gray-300 mb-6">
+                    <h3 class="font-display text-2xl font-bold mb-4 text-gold-deep">Recuperación de Computadoras</h3>
+                    <p class="text-warmgray mb-6">
                         ¿Tu computadora está lenta? La optimizo y la dejo rápida, segura y lista para estudiar o trabajar, sin necesidad de comprar una nueva.
                     </p>
-                    <ul class="text-sm text-gray-400 space-y-2">
+                    <ul class="text-sm text-warmgray space-y-2 mb-6">
                         <li>• Recuperación de PCs lentas</li>
                         <li>• Instalación de sistema optimizado</li>
                         <li>• Programas básicos incluidos</li>
                         <li>• Lista para usar desde el primer día</li>
                     </ul>
+                    <a href="#contacto" class="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-gold-ink hover:text-gold-deep transition-colors">
+                        Solicitar este servicio <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </a>
                 </div>
 
-                <div class="bg-black p-8 rounded-xl border border-gold/20 hover-lift fade-in">
+                <div class="bg-white p-8 rounded-xl border border-gold/30 shadow-md hover-lift fade-in flex flex-col">
                     <div class="w-16 h-16 gold-gradient rounded-lg flex items-center justify-center mb-6">
-                        <svg class="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
                         </svg>
                     </div>
-                    <h3 class="text-2xl font-bold mb-4 text-gold">Desarrollo Web</h3>
-                    <p class="text-gray-300 mb-6">Desarrollamos sitios web y aplicaciones web robustas, rápidas y escalables con las últimas tecnologías.</p>
-                    <ul class="text-sm text-gray-400 space-y-2">
+                    <h3 class="font-display text-2xl font-bold mb-4 text-gold-deep">Desarrollo Web</h3>
+                    <p class="text-warmgray mb-6">Desarrollamos sitios web y aplicaciones web robustas, rápidas y escalables con las últimas tecnologías.</p>
+                    <ul class="text-sm text-warmgray space-y-2 mb-6">
                         <li>• Sitios web corporativos</li>
                         <li>• Sitios web personales</li>
                         <li>• Tiendas en línea</li>
                         <li>• Portfolios Web</li>
                     </ul>
+                    <a href="#contacto" class="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-gold-ink hover:text-gold-deep transition-colors">
+                        Solicitar este servicio <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </a>
                 </div>
             </div>
         </div>
