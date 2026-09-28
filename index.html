@@ -956,18 +956,20 @@
          su propio ancho + el gap, asi la siguiente copia queda
          pegada donde termino la anterior y el loop no se nota.
 
-         brightness-0 invert: convierte cada logo (sin importar
-         si el SVG original era negro, de color o blanco) en una
-         silueta blanca solida, para que todos se vean parejos
-         sobre el fondo oscuro.
+         Se dejan los colores de marca originales de cada SVG:
+         sobre el fondo claro de esta seccion, los logos oscuros
+         (Linux, GitHub) se ven bien solos, sin necesitar ningun
+         filtro. Antes, sobre el fondo oscuro de la version negra
+         del sitio, GitHub llevaba invert (asi su octocat negro no
+         se perdia contra el fondo) — ya no aplica.
     ================================================ -->
-    <section id="tecnologias" class="py-20 bg-gray-900 overflow-hidden">
+    <section id="tecnologias" class="py-20 bg-ivory overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12 fade-in">
-                <h2 class="text-4xl md:text-5xl font-bold text-white">
-                    Tecnologías <span class="text-gold">que Usamos</span>
+                <h2 class="font-display text-4xl md:text-5xl font-bold text-ink">
+                    Tecnologías <span class="text-gold-deep">que Usamos</span>
                 </h2>
-                <p class="text-gray-400 mt-3">
+                <p class="text-warmgray mt-3">
                     Las herramientas y lenguajes con los que construimos cada proyecto.
                 </p>
             </div>
@@ -984,28 +986,37 @@
                  "viewBox" cuadrado con bastante relleno transparente
                  arriba/abajo del dibujo real, asi que a la misma altura
                  que los demas se ven chicos; con h-24 el trazo queda del
-                 mismo tamano visual que el resto.
-
-                 Se dejan los colores de marca originales de cada SVG (se
-                 ven bien sobre el fondo oscuro); Linux, VS Code y GitHub
-                 llevan el filtro "invert" porque sus colores originales
-                 (negro solido o azules muy oscuros) casi no se veian
-                 sobre el fondo oscuro de la seccion. -->
+                 mismo tamano visual que el resto. -->
             <div id="tech-logos-track" class="logo-cloud-mask relative flex gap-14 fade-in">
                 <div class="flex shrink-0 animate-logo-cloud items-center gap-14">
                     <img src="/svg/linux-tux-svgrepo-com.svg" alt="Linux" class="h-16 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
                     <img src="/svg/visual-studio-code-svgrepo-com.svg" alt="Visual Studio Code" class="h-16 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
                     <img src="/svg/react-svgrepo-com.svg" alt="React" class="h-16 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
-                    <img src="/svg/supabase-logo-wordmark--dark.svg" alt="Supabase" class="h-10 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
+                    <!-- Este wordmark de Supabase es la variante "dark" (texto
+                         blanco, pensada para fondos oscuros): sobre el fondo
+                         claro de esta seccion queda invisible sin una base
+                         oscura propia, asi que se lo damos con un chip. -->
+                    <span class="bg-ink rounded-lg px-4 py-2 inline-flex items-center opacity-90 hover:opacity-100 transition-opacity">
+                        <img src="/svg/supabase-logo-wordmark--dark.svg" alt="Supabase" class="h-8 w-auto object-contain">
+                    </span>
                     <img src="/svg/html-5-svgrepo-com.svg" alt="HTML" class="h-16 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
                     <img src="/svg/css-3-svgrepo-com.svg" alt="CSS" class="h-16 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
-                    <img src="/svg/tailwindcss-svgrepo-com.svg" alt="Tailwind CSS" class="h-56 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
+                    <!-- Igual que Supabase arriba: este SVG trae el texto
+                         "tailwindcss" en blanco (variante para fondo oscuro),
+                         necesita su propio chip oscuro sobre el fondo claro. -->
+                    <span class="bg-ink rounded-lg px-4 py-2 inline-flex items-center opacity-90 hover:opacity-100 transition-opacity">
+                        <img src="/svg/tailwindcss-svgrepo-com.svg" alt="Tailwind CSS" class="h-10 w-auto object-contain">
+                    </span>
                     <img src="/svg/bootstrap-svgrepo-com.svg" alt="Bootstrap" class="h-16 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
                     <img src="/svg/js-svgrepo-com.svg" alt="JavaScript" class="h-16 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
                     <img src="/svg/typescript-official-svgrepo-com.svg" alt="TypeScript" class="h-16 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
                     <img src="/svg/git-svgrepo-com.svg" alt="Git" class="h-16 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
-                    <img src="/svg/github-142-svgrepo-com.svg" alt="GitHub" class="h-16 w-auto object-contain invert opacity-90 hover:opacity-100 transition-opacity">
-                    <img src="/svg/vercel-svgrepo-com.svg" alt="Vercel" class="h-32 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
+                    <img src="/svg/github-142-svgrepo-com.svg" alt="GitHub" class="h-16 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
+                    <!-- Este SVG de Vercel es todo blanco (variante para fondo
+                         oscuro): mismo chip oscuro que Supabase y Tailwind. -->
+                    <span class="bg-ink rounded-lg px-4 py-2.5 inline-flex items-center opacity-90 hover:opacity-100 transition-opacity">
+                        <img src="/svg/vercel-svgrepo-com.svg" alt="Vercel" class="h-6 w-auto object-contain">
+                    </span>
                     <img src="/svg/canva-icon.svg" alt="Canva" class="h-16 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity">
 
                 </div>
