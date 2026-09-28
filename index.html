@@ -5,15 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Noble Studio - Diseño y Desarrollo Digital</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
+        /* ================================================
+           PALETA DORADO/BLANCO — nivel negocio
+
+           gold-deep (#A67C00) da ~3.8:1 de contraste sobre
+           blanco: pasa WCAG AA solo para texto GRANDE (titulos,
+           iconos grandes), no para parrafos ni links de tamano
+           normal (necesitan 4.5:1). Por eso existe gold-ink
+           (#8A6500, ~5.3:1): mismo espiritu dorado pero seguro
+           para texto/enlaces de tamano normal sobre blanco o
+           marfil. gold (#C9A227) y gold-light (#F3E7C3) son para
+           bordes, iconos y fondos de badge — nunca llevan texto
+           encima, asi que no les aplica el minimo de contraste.
+        ================================================ */
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        gold: '#FFD700',
-                        'gold-dark': '#B8860B',
-                        'gold-light': '#FFF8DC'
+                        'gold-deep': '#A67C00',
+                        gold: '#C9A227',
+                        'gold-light': '#F3E7C3',
+                        'gold-ink': '#8A6500',
+                        ivory: '#FAF8F3',
+                        ink: '#1A1A1A',
+                        warmgray: '#5C5A55'
+                    },
+                    fontFamily: {
+                        sans: ['DM Sans', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                        display: ['Cormorant Garamond', 'Georgia', 'serif']
                     },
                     keyframes: {
                         // Mueve el track de logos exactamente su propio ancho + el
@@ -42,10 +66,11 @@
         ================================================ */
         body {
             box-sizing: border-box;
+            background: #FFFFFF;
         }
 
         /* ================================================
-           GRADIENTE ANIMADO (hero y seccion contacto)
+           GRADIENTE ANIMADO (banda oscura del footer)
 
            @keyframes define una animacion con nombre.
            Aqui movemos la "posicion" del fondo de
@@ -56,6 +81,10 @@
            lienzo de fondo 4x mas grande que el elemento.
            La animacion mueve background-position dentro
            de ese lienzo gigante.
+
+           Ya no se usa en el hero ni en #contacto (ahora
+           blancos/claros); queda solo para la banda oscura
+           intencional del footer.
         ================================================ */
         @keyframes gradientShift {
             0%   { background-position: 0% 50%; }
@@ -102,7 +131,7 @@
            Usado en botones, iconos y avatares del equipo.
         ================================================ */
         .gold-gradient {
-            background: linear-gradient(135deg, #8b9123 0%, #B8860B 100%);
+            background: linear-gradient(135deg, #D4AF37 0%, #A67C00 100%);
         }
 
         #servicios {
@@ -122,7 +151,7 @@
 
         .hover-lift:hover {
             transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 20px 40px rgba(26, 26, 26, 0.08), 0 4px 14px rgba(166, 124, 0, 0.10);
         }
 
         /* ================================================
@@ -164,8 +193,8 @@
            "gana" sobre text-black de Tailwind.
         ================================================ */
         #btn-contactame {
-            background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%);
-            color: #000;
+            background: linear-gradient(135deg, #D4AF37 0%, #A67C00 100%);
+            color: #1A1A1A;
             transition: background 0.3s ease, color 0.3s ease;
         }
 
@@ -408,7 +437,7 @@
         }
     </style>
 </head>
-<body class="bg-black text-white font-sans">
+<body class="bg-white text-ink font-sans">
 
     <!-- ================================================
          BOTON FLOTANTE DE WHATSAPP
