@@ -252,6 +252,79 @@
         }
 
         /* ================================================
+           CAROUSEL DE PROYECTOS: TARJETAS 3D
+
+           El transform 3D (perspective + rotateY + translateZ)
+           lo escribe el JS en cada frame de scroll, por eso aqui
+           NO se anima transform (una transition encima solo
+           meteria retraso). Solo se animan sombra y borde, que
+           cambian al pasar a ser la tarjeta activa.
+        ================================================ */
+        .projects-card {
+            transition: box-shadow 0.5s ease, border-color 0.5s ease;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+        }
+
+        /* Tarjeta activa: borde con un destello dorado que gira
+           alrededor (conic-gradient en el border-box + fondo negro
+           en el padding-box). @property permite animar el angulo;
+           en navegadores sin @property el borde queda fijo. */
+        @property --borde-angulo {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+
+        @keyframes borde-giro {
+            to { --borde-angulo: 360deg; }
+        }
+
+        .projects-card.is-active {
+            border-color: transparent;
+            background:
+                linear-gradient(#000, #000) padding-box,
+                conic-gradient(from var(--borde-angulo),
+                    rgba(201, 162, 39, 0.35) 0deg 230deg,
+                    #F3E7C3 290deg,
+                    #C9A227 320deg,
+                    rgba(201, 162, 39, 0.35) 360deg) border-box;
+            animation: borde-giro 5s linear infinite;
+            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.9), 0 0 50px -12px rgba(201, 162, 39, 0.45);
+        }
+
+        /* Las tarjetas laterales se pueden clickear para traerlas
+           al centro (ver JS: click en tarjeta no activa). */
+        .projects-card:not(.is-active) {
+            cursor: pointer;
+        }
+
+        /* Parallax de la imagen/video dentro de la tarjeta activa:
+           se desplaza al lado contrario del cursor (--mx/--my, del
+           JS del tilt), como si estuviera en un plano mas profundo.
+           scale(1.08) deja margen para que no se vean los bordes. */
+        .projects-card.is-active .projects-media {
+            transform: scale(1.08) translate(calc((50% - var(--mx, 50%)) * 0.05), calc((50% - var(--my, 50%)) * 0.05));
+        }
+
+        /* Reflejo de luz que sigue al cursor (--mx/--my los
+           pone el JS del tilt). Solo visible en la tarjeta
+           activa al pasar el mouse. */
+        .projects-card-shine {
+            position: absolute;
+            inset: 0;
+            z-index: 20;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            background: radial-gradient(circle at var(--mx, 50%) var(--my, 0%), rgba(243, 231, 195, 0.16), transparent 55%);
+        }
+
+        .projects-card.is-active:hover .projects-card-shine {
+            opacity: 1;
+        }
+
+        /* ================================================
            ACCESIBILIDAD: REDUCCION DE MOVIMIENTO
 
            prefers-reduced-motion detecta la preferencia
@@ -278,6 +351,9 @@
             .projects-slide-inner {
                 transform: none !important;
                 opacity: 1 !important;
+            }
+            .projects-card.is-active {
+                animation: none;
             }
         }
     </style>
@@ -523,13 +599,19 @@
             ================================================ -->
             <div id="projects-carousel-region" tabindex="0" role="region"
                  aria-roledescription="carousel" aria-label="Carousel de proyectos destacados"
-                 class="outline-none focus-visible:ring-2 focus-visible:ring-gold/60 rounded-xl">
+                 class="relative outline-none focus-visible:ring-2 focus-visible:ring-gold/60 rounded-xl">
+
+                <!-- Halo dorado detras de la tarjeta central: da profundidad
+                     al escenario 3D. Decorativo, no recibe eventos. -->
+                <div aria-hidden="true" class="pointer-events-none absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2 w-[80%] md:w-[55%] h-[55%] rounded-full bg-gold/10 blur-3xl"></div>
 
                 <!-- Viewport del carousel. overflow-hidden oculta los slides
                      fuera del area visible. align:'center' (JS) + loop:true
                      centran el slide activo grande y dejan asomar los vecinos
-                     mas chicos y opacos (efecto coverflow). -->
-                <div class="overflow-hidden cursor-grab active:cursor-grabbing" id="projects-carousel">
+                     rotados en 3D, mas atras y mas opacos (coverflow 3D).
+                     py-10: deja aire para que los bordes de las tarjetas
+                     giradas no se corten arriba/abajo. -->
+                <div class="relative overflow-hidden py-10 cursor-grab active:cursor-grabbing" id="projects-carousel">
 
                     <!-- Embla mueve este contenedor flex horizontalmente con CSS transforms. -->
                     <div class="flex gap-6 items-center">
@@ -551,7 +633,9 @@
                                  projects-slide-inner: objetivo del tween de escala/opacidad
                                  (JS), nunca el div de arriba que Embla mide para su layout.
                                  hover-lift: clase custom que sube la tarjeta al hover. -->
-                            <div class="projects-slide-inner rounded-xl overflow-hidden group flex flex-col bg-black border border-gold/20 hover-lift">
+                            <div class="projects-slide-inner projects-card relative rounded-xl overflow-hidden group flex flex-col bg-black border border-gold/20">
+                                <!-- Brillo que sigue al cursor sobre la tarjeta activa (ver .projects-card-shine). -->
+                                <div class="projects-card-shine" aria-hidden="true"></div>
 
                                 <!-- Contenedor de la imagen. relative: ancla el badge
                                      y el overlay degradado. aspect-video (16:9). -->
@@ -559,7 +643,7 @@
                                     <img src="/assets/MyEducInicio.png"
                                          alt="Diseño de interfaz de usuario — MyEduc"
                                          loading="lazy"
-                                         class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
+                                         class="projects-media w-full h-full object-cover transition duration-300 group-hover:scale-105">
                                     <!-- Badge honesto: el JS lo llena leyendo data-tipo del slide. -->
                                     <span class="proyecto-badge absolute top-3 left-3 z-10 text-xs font-semibold px-3 py-1 rounded-full bg-white/90 text-ink backdrop-blur-sm"></span>
                                     <!-- Overlay degradado: aparece al pasar el mouse (desktop),
@@ -595,12 +679,14 @@
                              SLIDE 2 — Las Chemas del Mapa (tienda de camisas)
                         ================================================ -->
                         <div class="shrink-0 grow-0 basis-[78%] sm:basis-[62%] lg:basis-[460px]" data-tipo="cliente">
-                            <div class="projects-slide-inner rounded-xl overflow-hidden group flex flex-col bg-black border border-gold/20 hover-lift">
+                            <div class="projects-slide-inner projects-card relative rounded-xl overflow-hidden group flex flex-col bg-black border border-gold/20">
+                                <!-- Brillo que sigue al cursor sobre la tarjeta activa (ver .projects-card-shine). -->
+                                <div class="projects-card-shine" aria-hidden="true"></div>
                                 <div class="relative overflow-hidden bg-gray-900 aspect-video">
                                     <!-- preload="metadata": no descarga el video completo de
                                          entrada, el JS del carousel lo reproduce solo cuando
                                          su slide esta activo (ver evento 'select'). -->
-                                    <video class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
+                                    <video class="projects-media w-full h-full object-cover transition duration-300 group-hover:scale-105"
                                            muted loop playsinline preload="metadata">
                                         <source src="/assets/laschemasdelmapa.mp4" type="video/mp4" />
                                     </video>
@@ -635,9 +721,11 @@
                              SLIDE 3 — Pokédex App
                         ================================================ -->
                         <div class="shrink-0 grow-0 basis-[78%] sm:basis-[62%] lg:basis-[460px]" data-tipo="conceptual">
-                            <div class="projects-slide-inner rounded-xl overflow-hidden group flex flex-col bg-black border border-gold/20 hover-lift">
+                            <div class="projects-slide-inner projects-card relative rounded-xl overflow-hidden group flex flex-col bg-black border border-gold/20">
+                                <!-- Brillo que sigue al cursor sobre la tarjeta activa (ver .projects-card-shine). -->
+                                <div class="projects-card-shine" aria-hidden="true"></div>
                                 <div class="relative overflow-hidden bg-gray-900 aspect-video">
-                                    <video class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
+                                    <video class="projects-media w-full h-full object-cover transition duration-300 group-hover:scale-105"
                                            muted loop playsinline preload="metadata">
                                         <source src="/assets/PokeApi.mp4" type="video/mp4" />
                                     </video>
@@ -673,9 +761,11 @@
                              SLIDE 4 — Doja E-commerce
                         ================================================ -->
                         <div class="shrink-0 grow-0 basis-[78%] sm:basis-[62%] lg:basis-[460px]" data-tipo="conceptual">
-                            <div class="projects-slide-inner rounded-xl overflow-hidden group flex flex-col bg-black border border-gold/20 hover-lift">
+                            <div class="projects-slide-inner projects-card relative rounded-xl overflow-hidden group flex flex-col bg-black border border-gold/20">
+                                <!-- Brillo que sigue al cursor sobre la tarjeta activa (ver .projects-card-shine). -->
+                                <div class="projects-card-shine" aria-hidden="true"></div>
                                 <div class="relative overflow-hidden bg-gray-900 aspect-video">
-                                    <video class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
+                                    <video class="projects-media w-full h-full object-cover transition duration-300 group-hover:scale-105"
                                            muted loop playsinline preload="metadata">
                                         <source src="/img/doja-video.mp4" type="video/mp4" />
                                     </video>
@@ -708,13 +798,14 @@
                         </div>
 
                         <!-- ================================================
-                             SLIDE 5 —Soda Pollo frito GEME
-                             Sigue comentado: no se reactiva sin confirmacion.
+                             SLIDE 5 — Soda Pollo Frito GEME
                         ================================================ -->
                          <div class="shrink-0 grow-0 basis-[78%] sm:basis-[62%] lg:basis-[460px]" data-tipo="cliente">
-                            <div class="projects-slide-inner rounded-xl overflow-hidden group flex flex-col bg-black border border-gold/20 hover-lift">
+                            <div class="projects-slide-inner projects-card relative rounded-xl overflow-hidden group flex flex-col bg-black border border-gold/20">
+                                <!-- Brillo que sigue al cursor sobre la tarjeta activa (ver .projects-card-shine). -->
+                                <div class="projects-card-shine" aria-hidden="true"></div>
                                 <div class="relative overflow-hidden bg-gray-900 aspect-video">
-                                    <video class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
+                                    <video class="projects-media w-full h-full object-cover transition duration-300 group-hover:scale-105"
                                            muted loop playsinline preload="metadata">
                                         <source src="/img/soda-geme.mp4" type="video/mp4" />
                                     </video>
@@ -754,17 +845,17 @@
                      viewport (antes los botones vivian arriba,
                      separados de los demas controles).
                 ================================================ -->
-                <div class="flex items-center justify-between mt-8 gap-4 flex-wrap">
+                <div class="relative flex items-center justify-between mt-2 gap-3 sm:gap-4 flex-wrap">
                     <!-- Dots: el JS los genera, uno por slide real (no por clon). -->
                     <div id="projects-dots" class="flex items-center gap-2"></div>
 
-                    <div class="flex items-center gap-4 ml-auto">
-                        <span id="projects-counter" class="text-gold text-sm font-semibold tabular-nums" aria-live="polite">01 / 04</span>
+                    <div class="flex items-center gap-3 sm:gap-4 ml-auto">
+                        <span id="projects-counter" class="text-gold text-sm font-semibold tabular-nums" aria-live="polite">01 / 05</span>
 
                         <!-- Barra de progreso: se llena hasta el siguiente avance
                              automatico. Oculta por completo si el plugin de
                              autoplay no cargo (ver JS: sin plugin, sin barra). -->
-                        <div id="projects-progress-track" class="w-16 sm:w-24 h-1 bg-white/10 rounded-full overflow-hidden">
+                        <div id="projects-progress-track" class="w-10 sm:w-24 h-1 bg-white/10 rounded-full overflow-hidden">
                             <div id="projects-progress-bar" class="h-full bg-gold origin-left" style="transform: scaleX(0)"></div>
                         </div>
 
@@ -1158,8 +1249,8 @@
         /* ================================================
            CAROUSEL DE PROYECTOS (Embla Carousel + plugin Autoplay)
 
-           Coverflow: align:'center' + loop:true, con un "tween"
-           de escala/opacidad en cada frame de scroll (evento
+           Coverflow: align:'center' + loop:true, con un "tween" 3D
+           (rotacion/profundidad/escala/opacidad) en cada frame de scroll (evento
            'scroll', que Embla dispara tanto en drag como en
            scrollTo/autoplay). Es la receta oficial de Embla
            ("Tween Scale"), adaptada aqui.
@@ -1264,7 +1355,7 @@
                 const dot = document.createElement('button');
                 dot.type = 'button';
                 dot.setAttribute('aria-label', 'Ir al proyecto ' + (index + 1));
-                dot.className = 'w-2.5 h-2.5 rounded-full bg-white/20 transition-colors duration-300';
+                dot.className = 'w-2.5 h-2.5 rounded-full bg-white/20 transition-all duration-300';
                 dot.addEventListener('click', function () {
                     emblaApi.scrollTo(index);
                     reiniciarAutoplay();
@@ -1277,8 +1368,11 @@
             const actualizarDotsYContador = function () {
                 const selected = emblaApi.selectedScrollSnap();
                 dots.forEach((dot, index) => {
+                    // El activo se estira en una "pastilla" dorada.
                     dot.classList.toggle('bg-gold', index === selected);
+                    dot.classList.toggle('w-7', index === selected);
                     dot.classList.toggle('bg-white/20', index !== selected);
+                    dot.classList.toggle('w-2.5', index !== selected);
                 });
                 counterEl.textContent = pad2(selected + 1) + ' / ' + pad2(totalSlides);
             };
@@ -1328,24 +1422,88 @@
             }
 
             /* ================================================
-               TWEEN COVERFLOW (escala + opacidad)
+               TARJETA ACTIVA (glow dorado)
 
-               Se aplica sobre .projects-slide-inner (el div de la
-               tarjeta), nunca sobre el nodo que Embla mide para su
-               layout. No lleva transition en CSS: el JS ya actualiza
-               en cada frame de scroll real, una transition CSS
-               encima solo generaria retraso.
+               Marca con .is-active la tarjeta del slide
+               seleccionado (borde y sombra dorados, ver CSS).
+               Es estatico, asi que tambien corre con
+               prefers-reduced-motion.
+            ================================================ */
+            const actualizarActiva = function () {
+                const selected = emblaApi.selectedScrollSnap();
+                emblaApi.slideNodes().forEach((slideNode, index) => {
+                    const inner = slideNode.querySelector('.projects-slide-inner');
+                    if (inner) inner.classList.toggle('is-active', index === selected);
+                });
+            };
 
-               Se omite por completo con prefers-reduced-motion: los
-               slides quedan a tamaño y opacidad normales (reforzado
-               ademas por CSS en el media query correspondiente).
+            emblaApi.on('select', actualizarActiva);
+            emblaApi.on('reInit', actualizarActiva);
+            actualizarActiva();
+
+            /* ================================================
+               CLICK EN TARJETA LATERAL: traerla al centro
+
+               En fase de captura, para frenar el click antes de
+               que llegue al link "Ver Sitio Web" de una tarjeta
+               girada: el primer click la centra, y ya centrada
+               sus links funcionan normal. (Embla por su cuenta
+               ya ignora el click que termina un arrastre.)
+            ================================================ */
+            viewport.addEventListener('click', function (e) {
+                const slideNode = e.target.closest('[data-tipo]');
+                if (!slideNode) return;
+                const index = emblaApi.slideNodes().indexOf(slideNode);
+                if (index === -1 || index === emblaApi.selectedScrollSnap()) return;
+                e.preventDefault();
+                e.stopPropagation();
+                emblaApi.scrollTo(index);
+                reiniciarAutoplay();
+            }, true);
+
+            /* ================================================
+               TWEEN COVERFLOW 3D
+
+               Basado en la receta oficial de Embla ("Tween
+               Scale"), pero con desplazamiento CON SIGNO: cada
+               tarjeta sabe si esta a la izquierda (-1) o a la
+               derecha (+1) del centro. Con eso:
+               - rotateY la gira hacia el centro (izq: +, der: -)
+               - translateZ la manda hacia el fondo
+               - translateX la acerca al centro (se superponen)
+               - scale/opacity la achican y atenuan
+               y z-index en el slide deja la central siempre encima.
+
+               perspective() va dentro del propio transform (no en
+               un contenedor) porque Embla ya mueve el contenedor
+               con su propio transform y no hay que tocarlo.
+
+               Se aplica sobre .projects-slide-inner, nunca sobre
+               el nodo que Embla mide para su layout. Se omite por
+               completo con prefers-reduced-motion (reforzado ademas
+               por CSS en el media query correspondiente).
             ================================================ */
             if (!prefersReducedMotion) {
-                const SCALE_MIN = 0.85, SCALE_MAX = 1;
-                const OPACITY_MIN = 0.45, OPACITY_MAX = 1;
+                const PERSPECTIVE = 1400;
+                const SCALE_MIN = 0.82;
+                const OPACITY_MIN = 0.35;
                 const TWEEN_FACTOR = emblaApi.scrollSnapList().length;
 
+                // Valores de escena segun ancho: en movil los vecinos casi
+                // no asoman, asi que se giran menos. Se recalcula en reInit
+                // (Embla hace reInit al cambiar el tamano de la ventana).
+                let maxRotate, maxDepth, pullX;
+                const medirEscena = function () {
+                    const angosto = window.innerWidth < 640;
+                    maxRotate = angosto ? 25 : 40;   // grados
+                    maxDepth  = angosto ? 120 : 220; // px hacia el fondo
+                    pullX     = angosto ? 4 : 12;    // % del ancho hacia el centro
+                };
+
                 let tweenNodes = [];
+                const offsets = []; // -1 (izq) .. 0 (centro) .. +1 (der), por slide
+                const tilt = { x: 0, y: 0, objetivoX: 0, objetivoY: 0 };
+
                 const setTweenNodes = function () {
                     tweenNodes = emblaApi.slideNodes().map((slideNode) =>
                         slideNode.querySelector('.projects-slide-inner')
@@ -1353,6 +1511,54 @@
                 };
 
                 const numberWithinRange = (n, min, max) => Math.min(Math.max(n, min), max);
+
+                /* ------------------------------------------------
+                   ENTRADA ANIMADA
+
+                   La primera vez que el carousel entra en pantalla,
+                   las tarjetas suben desde abajo, inclinadas hacia
+                   atras, y se acomodan en su lugar: primero la
+                   central y luego las laterales (escalonado segun
+                   la distancia al centro). Mientras no se haya
+                   visto, quedan ocultas (introInicio === null).
+                ------------------------------------------------ */
+                const INTRO_DURACION = 900, INTRO_ESCALON = 180; // ms
+                let introInicio = null;
+                let introTerminada = false;
+
+                const easeOutCubic = (x) => 1 - Math.pow(1 - x, 3);
+
+                const progresoIntro = function (t) {
+                    if (introTerminada) return 1;
+                    if (introInicio === null) return 0;
+                    const transcurrido = performance.now() - introInicio - t * INTRO_ESCALON;
+                    return easeOutCubic(numberWithinRange(transcurrido / INTRO_DURACION, 0, 1));
+                };
+
+                const pintarSlide = function (index) {
+                    const inner = tweenNodes[index];
+                    if (!inner || offsets[index] === undefined) return;
+
+                    const d = offsets[index];
+                    const t = Math.abs(d);
+                    const conTilt = index === emblaApi.selectedScrollSnap();
+                    const intro = progresoIntro(t);
+
+                    const rotY = -d * maxRotate + (conTilt ? tilt.y : 0);
+                    const rotX = (conTilt ? tilt.x : 0) + (1 - intro) * 25;
+                    const scale = 1 - t * (1 - SCALE_MIN);
+
+                    inner.style.transform =
+                        'perspective(' + PERSPECTIVE + 'px)' +
+                        ' translateY(' + ((1 - intro) * 120) + 'px)' +
+                        ' translateX(' + (-d * pullX) + '%)' +
+                        ' translateZ(' + (-t * maxDepth) + 'px)' +
+                        ' rotateY(' + rotY + 'deg)' +
+                        ' rotateX(' + rotX + 'deg)' +
+                        ' scale(' + scale + ')';
+                    inner.style.opacity = (1 - t * (1 - OPACITY_MIN)) * intro;
+                    emblaApi.slideNodes()[index].style.zIndex = String(10 - Math.round(t * 5));
+                };
 
                 const tweenCoverflow = function () {
                     const engine = emblaApi.internalEngine();
@@ -1378,23 +1584,115 @@
                                 });
                             }
 
-                            const t = numberWithinRange(Math.abs(diffToTarget) * TWEEN_FACTOR, 0, 1);
-                            const scale = SCALE_MAX - t * (SCALE_MAX - SCALE_MIN);
-                            const opacity = OPACITY_MAX - t * (OPACITY_MAX - OPACITY_MIN);
-                            const inner = tweenNodes[slideIndex];
-                            if (inner) {
-                                inner.style.transform = 'scale(' + scale + ')';
-                                inner.style.opacity = opacity;
-                            }
+                            offsets[slideIndex] = numberWithinRange(diffToTarget * TWEEN_FACTOR, -1, 1);
+                            pintarSlide(slideIndex);
                         });
                     });
                 };
 
+                medirEscena();
                 setTweenNodes();
                 emblaApi.on('scroll', tweenCoverflow);
-                emblaApi.on('reInit', function () { setTweenNodes(); tweenCoverflow(); });
+                emblaApi.on('reInit', function () { medirEscena(); setTweenNodes(); tweenCoverflow(); });
                 emblaApi.on('slideFocus', tweenCoverflow);
+                // slidesInView() se llena de forma asincrona (IntersectionObserver),
+                // asi que el primer tween de abajo puede no ver ningun slide: este
+                // evento lo repite en cuanto Embla sabe cuales estan visibles.
+                emblaApi.on('slidesInView', tweenCoverflow);
                 tweenCoverflow();
+
+                const animarIntro = function () {
+                    tweenCoverflow();
+                    const fin = INTRO_DURACION + INTRO_ESCALON * 2;
+                    if (performance.now() - introInicio < fin) {
+                        requestAnimationFrame(animarIntro);
+                    } else {
+                        introTerminada = true;
+                        tweenCoverflow();
+                    }
+                };
+
+                const iniciarIntro = function () {
+                    if (introInicio !== null) return;
+                    introInicio = performance.now();
+                    requestAnimationFrame(animarIntro);
+                };
+
+                if ('IntersectionObserver' in window) {
+                    const introObserver = new IntersectionObserver(function (entries) {
+                        if (entries.some((entry) => entry.isIntersecting)) {
+                            introObserver.disconnect();
+                            iniciarIntro();
+                        }
+                    }, { threshold: 0.3 });
+                    introObserver.observe(region);
+                } else {
+                    introTerminada = true;
+                    tweenCoverflow();
+                }
+
+                /* ------------------------------------------------
+                   TILT CON EL CURSOR (solo mouse/trackpad)
+
+                   La tarjeta activa se inclina un poco siguiendo
+                   el cursor y el reflejo (.projects-card-shine) se
+                   mueve con el. Se suaviza con un lerp en
+                   requestAnimationFrame en vez de una transition
+                   CSS, para no pelear con el tween de arriba.
+                   Se desactiva mientras se arrastra el carousel.
+                ------------------------------------------------ */
+                if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+                    const TILT_MAX_X = 8, TILT_MAX_Y = 10; // grados
+                    let tiltRaf = null;
+                    let arrastrando = false;
+
+                    const animarTilt = function () {
+                        tilt.x += (tilt.objetivoX - tilt.x) * 0.15;
+                        tilt.y += (tilt.objetivoY - tilt.y) * 0.15;
+                        const quieto = Math.abs(tilt.objetivoX - tilt.x) < 0.01 &&
+                                       Math.abs(tilt.objetivoY - tilt.y) < 0.01;
+                        if (quieto) { tilt.x = tilt.objetivoX; tilt.y = tilt.objetivoY; }
+                        pintarSlide(emblaApi.selectedScrollSnap());
+                        tiltRaf = quieto ? null : requestAnimationFrame(animarTilt);
+                    };
+
+                    const fijarObjetivo = function (x, y) {
+                        tilt.objetivoX = x;
+                        tilt.objetivoY = y;
+                        if (!tiltRaf) tiltRaf = requestAnimationFrame(animarTilt);
+                    };
+
+                    viewport.addEventListener('pointermove', function (e) {
+                        if (arrastrando) return;
+                        const inner = tweenNodes[emblaApi.selectedScrollSnap()];
+                        if (!inner) return;
+                        const rect = inner.getBoundingClientRect();
+                        const px = (e.clientX - rect.left) / rect.width;
+                        const py = (e.clientY - rect.top) / rect.height;
+                        if (px < 0 || px > 1 || py < 0 || py > 1) { soltarTilt(); return; }
+                        inner.style.setProperty('--mx', (px * 100) + '%');
+                        inner.style.setProperty('--my', (py * 100) + '%');
+                        fijarObjetivo((0.5 - py) * 2 * TILT_MAX_X, (px - 0.5) * 2 * TILT_MAX_Y);
+                    });
+
+                    // Vuelve la tarjeta a plano y centra el parallax de la imagen.
+                    const soltarTilt = function () {
+                        tweenNodes.forEach((inner) => {
+                            if (!inner) return;
+                            inner.style.setProperty('--mx', '50%');
+                            inner.style.setProperty('--my', '50%');
+                        });
+                        fijarObjetivo(0, 0);
+                    };
+
+                    viewport.addEventListener('pointerleave', soltarTilt);
+                    emblaApi.on('pointerDown', function () { arrastrando = true; fijarObjetivo(0, 0); });
+                    emblaApi.on('pointerUp', function () { arrastrando = false; });
+                    // Al cambiar de tarjeta activa, la nueva empieza sin inclinacion.
+                    emblaApi.on('select', function () {
+                        tilt.x = tilt.y = tilt.objetivoX = tilt.objetivoY = 0;
+                    });
+                }
             }
 
             /* ================================================
